@@ -25,7 +25,7 @@
 /* Subtle reveal-on-scroll for sections */
 (function() {
   if (!('IntersectionObserver' in window)) return;
-  const items = document.querySelectorAll('.research__item, .project, .resume__card, .gallery__item');
+  const items = document.querySelectorAll('.research__item, .project, .resume__card');
   items.forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(16px)';
@@ -42,6 +42,7 @@
   }, { threshold: 0.12 });
   items.forEach(el => obs.observe(el));
 })();
+
 /* Horizontal-scroll-on-vertical-scroll gallery
    Maps vertical scroll progress through the .hscroll section onto a
    horizontal translation of the .hscroll__track */
@@ -51,7 +52,6 @@
   const prog = document.getElementById('hscrollProgress');
   if (!section || !track) return;
 
-  // disable on small screens (CSS already handles layout)
   const mql = window.matchMedia('(max-width: 720px)');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -60,26 +60,36 @@
 
   function measure() {
     // we want the LAST slide's right edge to align with the viewport's right edge
-    // when scroll progress = 1. So maxX = total content width - viewport width.
+    // when scroll progress = 1. Measure from the actual rendered DOM.
     const lastSlide = track.lastElementChild;
     if (!lastSlide) { maxX = 0; return; }
-    // distance from track's left to last slide's right edge
     const trackRect = track.getBoundingClientRect();
     const lastRect = lastSlide.getBoundingClientRect();
-    const contentEnd = (lastRect.right - trackRect.left);
-    maxX = contentEnd - window.innerWidth + parseFloat(getComputedStyle(track).paddingRight || 0);
+    // distance from track's left edge to the last slide's right edge,
+    // accounting for any current transform (subtract it back out)
+    const currentX = getCurrentX();
+    const contentEnd = (lastRect.right - trackRect.left) + currentX;
+    const trailingPad = parseFloat(getComputedStyle(track).paddingRight || 0);
+    maxX = contentEnd - window.innerWidth + trailingPad;
     if (maxX < 0) maxX = 0;
+  }
+
+  function getCurrentX() {
+    // read the current translateX from the inline style, if any
+    const t = track.style.transform || '';
+    const m = t.match(/translate3d\(\s*(-?\d+(?:\.\d+)?)/);
+    return m ? -parseFloat(m[1]) : 0;
   }
 
   function update() {
     if (mql.matches || reduce.matches) {
       track.style.transform = '';
+      if (prog) prog.style.width = '0%';
       return;
     }
     const rect = section.getBoundingClientRect();
     const total = section.offsetHeight - window.innerHeight;
-    // progress: 0 when section's top hits viewport top, 1 when it's about to leave
-    let p = (-rect.top) / total;
+    let p = total > 0 ? (-rect.top) / total : 0;
     p = Math.max(0, Math.min(1, p));
     track.style.transform = `translate3d(${-p * maxX}px, 0, 0)`;
     if (prog) prog.style.width = (p * 100) + '%';
@@ -92,10 +102,22 @@
     }
   }
 
+  function refresh() { measure(); update(); }
+
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { measure(); update(); });
-  // wait for images so widths are accurate
-  window.addEventListener('load', () => { measure(); update(); });
-  measure();
-  update();
+  window.addEventListener('resize', refresh);
+  window.addEventListener('load', refresh);
+
+  // re-measure when each image actually loads (their widths change layout)
+  track.querySelectorAll('img').forEach(img => {
+    if (img.complete) return;
+    img.addEventListener('load',  refresh);
+    img.addEventListener('error', refresh);
+  });
+
+  // safety re-measures for late-arriving fonts / layout settling
+  setTimeout(refresh, 300);
+  setTimeout(refresh, 1000);
+
+  refresh();
 })();
