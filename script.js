@@ -42,3 +42,30 @@
   }, { threshold: 0.12 });
   items.forEach(el => obs.observe(el));
 })();
+/* Carousel — arrow buttons + scroll progress bar */
+(function() {
+  const track = document.getElementById('carouselTrack');
+  const prog = document.getElementById('carouselProgress');
+  const prev = document.querySelector('.carousel__btn--prev');
+  const next = document.querySelector('.carousel__btn--next');
+  if (!track || !prog) return;
+
+  const scrollBy = () => Math.max(track.clientWidth * 0.7, 320);
+
+  prev?.addEventListener('click', () => {
+    track.scrollBy({ left: -scrollBy(), behavior: 'smooth' });
+  });
+  next?.addEventListener('click', () => {
+    track.scrollBy({ left:  scrollBy(), behavior: 'smooth' });
+  });
+
+  const updateProgress = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    const pct = max > 0 ? (track.scrollLeft / max) * 100 : 0;
+    prog.style.width = pct + '%';
+  };
+
+  track.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+})();

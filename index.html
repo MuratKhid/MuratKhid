@@ -282,7 +282,7 @@
     </div>
   </section>
 
- <!-- GALLERY -->
+<!-- GALLERY -->
   <section class="section" id="gallery">
     <div class="section__head">
       <span class="section__num">04</span>
@@ -290,26 +290,41 @@
       <span class="section__rule"></span>
     </div>
 
-    <p class="gallery__hint">// physical builds, prototypes, lab work</p>
+    <p class="gallery__hint">// physical builds, prototypes, lab work — scroll →</p>
 
-    <div class="gallery__grid">
-      <div class="gallery__item gallery__item--lg">
-        <img src="img/rover-deployment.jpg" alt="Rover chassis assembly, 2025" loading="lazy" />
+    <div class="carousel" id="carousel">
+      <button class="carousel__btn carousel__btn--prev" aria-label="Previous">←</button>
+      <button class="carousel__btn carousel__btn--next" aria-label="Next">→</button>
+
+      <div class="carousel__track" id="carouselTrack">
+        <figure class="carousel__slide">
+          <img src="img/rover-deployment.jpg" alt="Rover chassis assembly" loading="lazy" />
+          <figcaption>Rover chassis assembly · 2025</figcaption>
+        </figure>
+        <figure class="carousel__slide">
+          <img src="img/actuator-test.jpg" alt="4-DOF rover arm test" loading="lazy" />
+          <figcaption>4-DOF rover arm validation</figcaption>
+        </figure>
+        <figure class="carousel__slide">
+          <img src="img/spectrometer.jpg" alt="Custom spectrometer build" loading="lazy" />
+          <figcaption>Custom spectrometer build</figcaption>
+        </figure>
+        <figure class="carousel__slide">
+          <img src="img/ornl-lab.jpg" alt="Oak Ridge research poster" loading="lazy" />
+          <figcaption>ORNL — ML-driven alloy optimization poster</figcaption>
+        </figure>
+        <figure class="carousel__slide">
+          <img src="img/prosthetic-glove.jpg" alt="Pediatric prosthetic limb" loading="lazy" />
+          <figcaption>Pediatric prosthetic limb · Yale AID</figcaption>
+        </figure>
+        <figure class="carousel__slide">
+          <img src="img/pinn-results.jpg" alt="PINN deformation field" loading="lazy" />
+          <figcaption>PINN deformation field</figcaption>
+        </figure>
       </div>
-      <div class="gallery__item">
-        <img src="img/actuator-test.jpg" alt="Linear actuator load test" loading="lazy" />
-      </div>
-      <div class="gallery__item">
-        <img src="img/spectrometer.jpg" alt="Custom spectrometer build" loading="lazy" />
-      </div>
-      <div class="gallery__item">
-        <img src="img/ornl-lab.jpg" alt="Oak Ridge alloy samples" loading="lazy" />
-      </div>
-      <div class="gallery__item gallery__item--wide">
-        <img src="img/prosthetic-glove.jpg" alt="Pediatric prosthetic limb" loading="lazy" />
-      </div>
-      <div class="gallery__item">
-        <img src="img/pinn-results.jpg" alt="PINN deformation field" loading="lazy" />
+
+      <div class="carousel__progress">
+        <div class="carousel__progress-fill" id="carouselProgress"></div>
       </div>
     </div>
   </section>
