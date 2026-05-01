@@ -567,55 +567,43 @@ body {
   color: var(--text-dim);
 }
 
-/* ── Gallery hint ────────────────────────────────────────────────────────── */
-
-.section--gallery { padding-bottom: 1rem; }
+/* ── Gallery / Carousel ──────────────────────────────────────────────────── */
 
 .gallery__hint {
   color: var(--text-muted);
   font-size: 11px;
-  margin-bottom: 0;
+  margin-bottom: 1.5rem;
 }
 
-/* ── Horizontal scroll-on-scroll ─────────────────────────────────────────── */
-
-.hscroll {
+.carousel {
   position: relative;
-  height: 500vh;
-  background: var(--bg);
+  margin: 0 calc(var(--pad) * -1);
 }
 
-.hscroll__sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
+.carousel__track {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: flex-end;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 0.5rem var(--pad) 1.5rem;
+  scrollbar-width: none;
 }
 
-.hscroll__track {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding-left: var(--pad);
-  padding-right: var(--pad);
-  will-change: transform;
-}
+.carousel__track::-webkit-scrollbar { display: none; }
 
-.hscroll__slide {
+.carousel__slide {
   flex: 0 0 auto;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  /* CONSTRAIN the slide so multiple are visible at once */
-  max-width: min(55vw, 720px);
+  max-width: min(60vw, 700px);
 }
 
-.hscroll__slide img {
-  /* fixed visual height — same for every slide */
-  height: min(60vh, 520px);
+.carousel__slide img {
+  height: clamp(280px, 55vh, 520px);
   width: auto;
   max-width: 100%;
   display: block;
@@ -623,9 +611,14 @@ body {
   border: 1px solid var(--border);
   background: var(--bg-card);
   object-fit: contain;
+  transition: border-color 0.25s ease;
 }
 
-.hscroll__slide figcaption {
+.carousel__slide:hover img {
+  border-color: var(--accent);
+}
+
+.carousel__slide figcaption {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-dim);
@@ -633,6 +626,7 @@ body {
   display: flex;
   align-items: baseline;
   gap: 0.8em;
+  padding-left: 0.2em;
 }
 
 .cap__num {
@@ -641,49 +635,53 @@ body {
   letter-spacing: 0.1em;
 }
 
-.hscroll__progress {
+.carousel__btn {
   position: absolute;
-  bottom: 4vh;
-  left: var(--pad);
-  right: var(--pad);
+  top: 45%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--bg-card) 85%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.2s ease;
+  display: grid;
+  place-items: center;
+}
+
+.carousel__btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.carousel__btn--prev { left: calc(var(--pad) - 22px); }
+.carousel__btn--next { right: calc(var(--pad) - 22px); }
+
+.carousel__progress {
   height: 2px;
   background: var(--border);
+  margin: 0 var(--pad);
   border-radius: 2px;
   overflow: hidden;
 }
 
-.hscroll__progress-fill {
+.carousel__progress-fill {
   height: 100%;
   width: 0%;
   background: var(--accent);
-  transition: width 0.05s linear;
+  transition: width 0.15s ease;
 }
 
 @media (max-width: 720px) {
-  .hscroll { height: auto; }
-  .hscroll__sticky {
-    position: static;
-    height: auto;
-    padding: 1rem 0 2rem;
-  }
-  .hscroll__track {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 1rem;
-  }
-  .hscroll__track::-webkit-scrollbar { display: none; }
-  .hscroll__slide {
-    scroll-snap-align: start;
-    max-width: 90vw;
-  }
-  .hscroll__slide img { height: 50vh; }
-  .hscroll__progress { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hscroll { height: auto; }
-  .hscroll__sticky { position: static; height: auto; }
-  .hscroll__track { flex-wrap: wrap; transform: none !important; }
+  .carousel__btn { display: none; }
+  .carousel__slide { max-width: 88vw; }
 }
 /* ── Resume ──────────────────────────────────────────────────────────────── */
 
