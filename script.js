@@ -42,30 +42,53 @@
   }, { threshold: 0.12 });
   items.forEach(el => obs.observe(el));
 })();
-/* Carousel — arrow buttons + scroll progress bar */
+/* Horizontal-scroll-on-vertical-scroll gallery
+   Maps vertical scroll progress through the .hscroll section onto a
+   horizontal translation of the .hscroll__track */
 (function() {
-  const track = document.getElementById('carouselTrack');
-  const prog = document.getElementById('carouselProgress');
-  const prev = document.querySelector('.carousel__btn--prev');
-  const next = document.querySelector('.carousel__btn--next');
-  if (!track || !prog) return;
+  const section = document.querySelector('.hscroll');
+  const track = document.getElementById('hscrollTrack');
+  const prog = document.getElementById('hscrollProgress');
+  if (!section || !track) return;
 
-  const scrollBy = () => Math.max(track.clientWidth * 0.7, 320);
+  // disable on small screens (CSS already handles layout)
+  const mql = window.matchMedia('(max-width: 720px)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  prev?.addEventListener('click', () => {
-    track.scrollBy({ left: -scrollBy(), behavior: 'smooth' });
-  });
-  next?.addEventListener('click', () => {
-    track.scrollBy({ left:  scrollBy(), behavior: 'smooth' });
-  });
+  let maxX = 0;
+  let ticking = false;
 
-  const updateProgress = () => {
-    const max = track.scrollWidth - track.clientWidth;
-    const pct = max > 0 ? (track.scrollLeft / max) * 100 : 0;
-    prog.style.width = pct + '%';
-  };
+  function measure() {
+    // amount the track needs to slide left to fully reveal the last slide
+    maxX = track.scrollWidth - window.innerWidth + 32;
+    if (maxX < 0) maxX = 0;
+  }
 
-  track.addEventListener('scroll', updateProgress, { passive: true });
-  window.addEventListener('resize', updateProgress);
-  updateProgress();
+  function update() {
+    if (mql.matches || reduce.matches) {
+      track.style.transform = '';
+      return;
+    }
+    const rect = section.getBoundingClientRect();
+    const total = section.offsetHeight - window.innerHeight;
+    // progress: 0 when section's top hits viewport top, 1 when it's about to leave
+    let p = (-rect.top) / total;
+    p = Math.max(0, Math.min(1, p));
+    track.style.transform = `translate3d(${-p * maxX}px, 0, 0)`;
+    if (prog) prog.style.width = (p * 100) + '%';
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => { update(); ticking = false; });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', () => { measure(); update(); });
+  // wait for images so widths are accurate
+  window.addEventListener('load', () => { measure(); update(); });
+  measure();
+  update();
 })();
