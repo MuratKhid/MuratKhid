@@ -581,9 +581,7 @@ body {
 
 .hscroll {
   position: relative;
-  /* total scroll distance — controls how long the user vertically scrolls
-     while the carousel travels horizontally. tweak for pacing. */
-  height: 380vh;
+  height: 380vh;       /* total scroll budget — tweak for pacing */
   background: var(--bg);
 }
 
@@ -599,8 +597,10 @@ body {
 
 .hscroll__track {
   display: flex;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 2rem;
   padding-left: var(--pad);
+  padding-right: var(--pad);
   will-change: transform;
 }
 
@@ -609,12 +609,15 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  /* CONSTRAIN the slide so multiple are visible at once */
+  max-width: min(55vw, 720px);
 }
 
 .hscroll__slide img {
-  height: 70vh;
-  max-height: 600px;
+  /* fixed visual height — same for every slide */
+  height: min(60vh, 520px);
   width: auto;
+  max-width: 100%;
   display: block;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -638,7 +641,6 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* progress bar at bottom */
 .hscroll__progress {
   position: absolute;
   bottom: 4vh;
@@ -657,7 +659,6 @@ body {
   transition: width 0.05s linear;
 }
 
-/* mobile fallback — disable scroll-jacking, use native horizontal scroll */
 @media (max-width: 720px) {
   .hscroll { height: auto; }
   .hscroll__sticky {
@@ -671,19 +672,18 @@ body {
     padding-bottom: 1rem;
   }
   .hscroll__track::-webkit-scrollbar { display: none; }
-  .hscroll__slide { scroll-snap-align: start; }
+  .hscroll__slide {
+    scroll-snap-align: start;
+    max-width: 90vw;
+  }
   .hscroll__slide img { height: 50vh; }
   .hscroll__progress { display: none; }
 }
 
-/* respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .hscroll { height: auto; }
   .hscroll__sticky { position: static; height: auto; }
-  .hscroll__track {
-    flex-wrap: wrap;
-    transform: none !important;
-  }
+  .hscroll__track { flex-wrap: wrap; transform: none !important; }
 }
 /* ── Resume ──────────────────────────────────────────────────────────────── */
 
@@ -810,14 +810,3 @@ body {
   }
 }
 
-.gallery__item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
-}
-
-.gallery__item:hover img {
-  transform: scale(1.04);
-}
