@@ -59,8 +59,15 @@
   let ticking = false;
 
   function measure() {
-    // amount the track needs to slide left to fully reveal the last slide
-    maxX = track.scrollWidth - window.innerWidth + 32;
+    // we want the LAST slide's right edge to align with the viewport's right edge
+    // when scroll progress = 1. So maxX = total content width - viewport width.
+    const lastSlide = track.lastElementChild;
+    if (!lastSlide) { maxX = 0; return; }
+    // distance from track's left to last slide's right edge
+    const trackRect = track.getBoundingClientRect();
+    const lastRect = lastSlide.getBoundingClientRect();
+    const contentEnd = (lastRect.right - trackRect.left);
+    maxX = contentEnd - window.innerWidth + parseFloat(getComputedStyle(track).paddingRight || 0);
     if (maxX < 0) maxX = 0;
   }
 

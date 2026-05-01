@@ -581,7 +581,7 @@ body {
 
 .hscroll {
   position: relative;
-  height: 380vh;       /* total scroll budget — tweak for pacing */
+  height: 500vh;
   background: var(--bg);
 }
 
