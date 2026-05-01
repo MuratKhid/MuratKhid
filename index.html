@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Grid overlay -->
+  <!-- Background layers -->
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
@@ -69,7 +69,7 @@
       </div>
       <div class="meta__col">
         <span class="meta__label">// status</span>
-        <span class="meta__value"><span class="pulse"></span>Open to new connections</span>
+        <span class="meta__value"><span class="pulse"></span>Open to summer 2026 research</span>
       </div>
       <div class="meta__col">
         <span class="meta__label">// contact</span>
@@ -90,14 +90,14 @@
       <div class="about__text">
         <p>
           I'm an undergraduate at <span class="hl">Yale University</span>, studying
-          mechanical engineering with a strong pull toward theoretics and computation. I work at the
+          mechanical engineering with a strong pull toward computation. I work at the
           intersection of <span class="hl">physics-based modeling, machine learning,
-          and  systems</span> — building things that need to move, deform,
+          and aerospace systems</span> — building things that need to move, deform,
           and survive in the real world.
         </p>
         <p>
           My research lives in the
-          Humphrey MechanoBiology Lab,
+          <a class="link" href="https://humphrey.yale.edu/" target="_blank" rel="noopener">Humphrey MechanoBiology Lab</a>,
           where I develop physics-informed neural networks for hyperelastic
           materials and accelerate their training on
           <span class="hl">NVIDIA L4 / A100 GPUs</span>. Last summer I built ML-driven
@@ -105,9 +105,9 @@
         </p>
         <p>
           Outside the lab, I lead the Yale Undergraduate Robotics team, where we're
-          designing a Mars rover life-detection system from scratch. I also lead the Yale-Assistive Innovation Design, where
-          we build custom assistive devices for pediatric patients. I have a passion for creating tools
-          that solve real problems and make an impact on people's lives.
+          designing a Mars rover life-detection system from scratch — the kind of
+          project that demands you reason about both finite element stress and CUDA
+          throughput in the same afternoon.
         </p>
       </div>
 
@@ -282,53 +282,53 @@
     </div>
   </section>
 
-<!-- GALLERY -->
-  <section class="section" id="gallery">
+  <!-- GALLERY -->
+  <section class="section section--gallery" id="gallery">
     <div class="section__head">
       <span class="section__num">04</span>
       <h2 class="section__title">Gallery</h2>
       <span class="section__rule"></span>
     </div>
 
-    <p class="gallery__hint">// physical builds, prototypes, lab work — scroll →</p>
+    <p class="gallery__hint">// physical builds, prototypes, lab work — keep scrolling</p>
+  </section>
 
-    <div class="carousel" id="carousel">
-      <button class="carousel__btn carousel__btn--prev" aria-label="Previous">←</button>
-      <button class="carousel__btn carousel__btn--next" aria-label="Next">→</button>
-
-      <div class="carousel__track" id="carouselTrack">
-        <figure class="carousel__slide">
+  <!-- Apple-style horizontal-scroll-on-vertical-scroll carousel -->
+  <section class="hscroll" aria-label="Project gallery carousel">
+    <div class="hscroll__sticky">
+      <div class="hscroll__track" id="hscrollTrack">
+        <figure class="hscroll__slide">
           <img src="img/rover-deployment.jpg" alt="Rover chassis assembly" loading="lazy" />
           <figcaption><span class="cap__num">01</span>Rover chassis assembly · 2025</figcaption>
         </figure>
-        <figure class="carousel__slide">
+        <figure class="hscroll__slide">
           <img src="img/actuator-test.jpg" alt="4-DOF rover arm test" loading="lazy" />
           <figcaption><span class="cap__num">02</span>4-DOF rover arm validation</figcaption>
         </figure>
-        <figure class="carousel__slide">
+        <figure class="hscroll__slide">
           <img src="img/spectrometer.jpg" alt="Custom spectrometer build" loading="lazy" />
           <figcaption><span class="cap__num">03</span>Custom spectrometer build</figcaption>
         </figure>
-        <figure class="carousel__slide">
+        <figure class="hscroll__slide">
           <img src="img/ornl-lab.jpg" alt="Oak Ridge research poster" loading="lazy" />
           <figcaption><span class="cap__num">04</span>ORNL — ML alloy optimization</figcaption>
         </figure>
-        <figure class="carousel__slide">
+        <figure class="hscroll__slide">
           <img src="img/prosthetic-glove.jpg" alt="Pediatric prosthetic limb" loading="lazy" />
           <figcaption><span class="cap__num">05</span>Pediatric prosthetic limb</figcaption>
         </figure>
-        <figure class="carousel__slide">
+        <figure class="hscroll__slide">
           <img src="img/pinn-results.jpg" alt="ML material prediction" loading="lazy" />
           <figcaption><span class="cap__num">06</span>ML material prediction</figcaption>
         </figure>
-        <figure class="carousel__slide">
+        <figure class="hscroll__slide">
           <img src="img/flow-CFD.jpg" alt="simulating flow around a cylinder" loading="lazy" />
           <figcaption><span class="cap__num">07</span>simulating flow around a cylinder</figcaption>
         </figure>
       </div>
 
-      <div class="carousel__progress">
-        <div class="carousel__progress-fill" id="carouselProgress"></div>
+      <div class="hscroll__progress">
+        <div class="hscroll__progress-fill" id="hscrollProgress"></div>
       </div>
     </div>
   </section>

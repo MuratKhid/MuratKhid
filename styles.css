@@ -567,43 +567,53 @@ body {
   color: var(--text-dim);
 }
 
-/* ── Gallery / Carousel ──────────────────────────────────────────────────── */
+/* ── Gallery hint ────────────────────────────────────────────────────────── */
+
+.section--gallery { padding-bottom: 1rem; }
 
 .gallery__hint {
   color: var(--text-muted);
   font-size: 11px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
 }
 
-.carousel {
+/* ── Apple-style horizontal-scroll-on-vertical-scroll ────────────────────── */
+
+.hscroll {
   position: relative;
-  margin: 0 calc(var(--pad) * -1);
+  height: 500vh;       /* total scroll budget — tweak for pacing */
+  background: var(--bg);
 }
 
-.carousel__track {
+.hscroll__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
-  align-items: flex-end;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding: 0.5rem var(--pad) 1.5rem;
-  scrollbar-width: none;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.carousel__track::-webkit-scrollbar { display: none; }
+.hscroll__track {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-left: var(--pad);
+  padding-right: var(--pad);
+  will-change: transform;
+}
 
-.carousel__slide {
+.hscroll__slide {
   flex: 0 0 auto;
-  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  max-width: min(60vw, 700px);
+  max-width: min(55vw, 720px);
 }
 
-.carousel__slide img {
-  height: clamp(280px, 55vh, 520px);
+.hscroll__slide img {
+  height: min(60vh, 520px);
   width: auto;
   max-width: 100%;
   display: block;
@@ -611,14 +621,9 @@ body {
   border: 1px solid var(--border);
   background: var(--bg-card);
   object-fit: contain;
-  transition: border-color 0.25s ease;
 }
 
-.carousel__slide:hover img {
-  border-color: var(--accent);
-}
-
-.carousel__slide figcaption {
+.hscroll__slide figcaption {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-dim);
@@ -626,7 +631,6 @@ body {
   display: flex;
   align-items: baseline;
   gap: 0.8em;
-  padding-left: 0.2em;
 }
 
 .cap__num {
@@ -635,54 +639,45 @@ body {
   letter-spacing: 0.1em;
 }
 
-.carousel__btn {
+.hscroll__progress {
   position: absolute;
-  top: 45%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--border-strong);
-  background: color-mix(in srgb, var(--bg-card) 85%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: var(--text);
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 5;
-  transition: all 0.2s ease;
-  display: grid;
-  place-items: center;
-}
-
-.carousel__btn:hover {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
-}
-
-.carousel__btn--prev { left: calc(var(--pad) - 22px); }
-.carousel__btn--next { right: calc(var(--pad) - 22px); }
-
-.carousel__progress {
+  bottom: 4vh;
+  left: var(--pad);
+  right: var(--pad);
   height: 2px;
   background: var(--border);
-  margin: 0 var(--pad);
   border-radius: 2px;
   overflow: hidden;
 }
 
-.carousel__progress-fill {
+.hscroll__progress-fill {
   height: 100%;
   width: 0%;
   background: var(--accent);
-  transition: width 0.15s ease;
+  transition: width 0.05s linear;
 }
 
 @media (max-width: 720px) {
-  .carousel__btn { display: none; }
-  .carousel__slide { max-width: 88vw; }
+  .hscroll { height: auto; }
+  .hscroll__sticky {
+    position: static;
+    height: auto;
+    padding: 1rem 0 2rem;
+  }
+  .hscroll__track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+  }
+  .hscroll__track::-webkit-scrollbar { display: none; }
+  .hscroll__slide {
+    scroll-snap-align: start;
+    max-width: 90vw;
+  }
+  .hscroll__slide img { height: 50vh; }
+  .hscroll__progress { display: none; }
 }
+
 /* ── Resume ──────────────────────────────────────────────────────────────── */
 
 .resume__intro {
@@ -806,5 +801,7 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+  .hscroll { height: auto; }
+  .hscroll__sticky { position: static; height: auto; }
+  .hscroll__track { flex-wrap: wrap; transform: none !important; }
 }
-
