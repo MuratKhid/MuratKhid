@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Custom Spectrometer — Murat Khidoyatov" />
+  <title>Custom Spectrometer · Murat Khidoyatov</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" type="image/jpeg" href="../img/headshot.jpg" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a href="../" class="nav__brand">
+      <span class="brand__bracket">[</span>
+      <span class="brand__name">murat.khidoyatov</span>
+      <span class="brand__bracket">]</span>
+    </a>
+    <nav class="nav__links">
+      <a href="../#about"><span class="nav__num">01</span>about</a>
+      <a href="../#research"><span class="nav__num">02</span>research</a>
+      <a href="../#projects"><span class="nav__num">03</span>projects</a>
+      <a href="../#gallery"><span class="nav__num">04</span>gallery</a>
+      <a href="../#resume"><span class="nav__num">05</span>resume</a>
+    </nav>
+    <button class="nav__theme" id="themeToggle" aria-label="Toggle theme">
+      <span class="theme-icon">◐</span>
+    </button>
+  </header>
+
+  <!-- Hero -->
+  <section class="section proj-hero">
+    <a href="../#projects" class="proj-back">← projects</a>
+    <div class="proj-hero__label">P-04 · Yale Undergraduate Robotics · Science Sub-team</div>
+    <h1 class="proj-hero__title">Custom Spectrometer</h1>
+    <p class="proj-hero__role">Designer & Builder · 2024 — Present</p>
+    <div class="proj-hero__tags">
+      <span>Raspberry Pi</span>
+      <span>CAD / SolidWorks</span>
+      <span>Fourier Methods</span>
+      <span>Optics</span>
+      <span>Image Analysis</span>
+      <span>Embedded Systems</span>
+      <span>Sheet Metal</span>
+    </div>
+  </section>
+
+  <!-- Image -->
+  <div class="proj-images">
+    <div class="proj-images__grid">
+      <img src="../img/spectrometer.jpg" alt="Custom spectrometer build" />
+    </div>
+    <p class="proj-images__caption">// Custom spectrometer for on-board soil sample analysis · Yale Robotics, 2024</p>
+  </div>
+
+  <!-- Body -->
+  <div class="proj-body">
+    <div class="proj-body__grid">
+
+      <main>
+        <div class="proj-subsection">
+          <div class="proj-subsection__label">// overview</div>
+          <h2 class="proj-subsection__title">On-Board Optical Analysis for Soil Samples</h2>
+          <p>
+            I designed and built a compact custom spectrometer that allows the rover to
+            analyze up to three separate soil samples for chemical signatures associated
+            with biological life activity. The goal was to perform on-board optical testing
+            with minimal power consumption and without relying on external laboratory
+            equipment — a hard constraint for a rover competing under strict weight and
+            budget limits.
+          </p>
+          <p>
+            The system uses a Raspberry Pi camera with its IR filter removed to extend
+            spectral sensitivity beyond the visible range. Incoming light from each sample
+            passes through a diffraction element positioned at 47° to split it into
+            component wavelength bands captured by the camera sensor. A custom rack-and-
+            pinion linear actuator cycles through three sample cuvettes, positioning each
+            one into the optical path sequentially without disturbing the measurement
+            environment.
+          </p>
+          <p>
+            The entire device is housed in a light-sealed 3D-printed enclosure to eliminate
+            ambient light contamination and ensure measurement consistency across different
+            ambient lighting conditions during competition.
+          </p>
+
+          <p class="proj-bullets__label">// what I did</p>
+          <ul class="proj-bullets">
+            <li>Designed the full spectrometer housing with a controlled, light-sealed optical pathway</li>
+            <li>Integrated a Raspberry Pi camera with IR filter removed to maximize spectral sensitivity</li>
+            <li>Positioned a diffraction element at 47° to decompose incoming light into wavelength bands</li>
+            <li>Designed and built a rack-and-pinion linear actuator to cycle through three sample cuvettes</li>
+            <li>Developed CAD models for internal mounts, guides, and optical alignment hardware</li>
+            <li>Ensured the housing is light-tight and mechanically rigid for consistent, repeatable readings</li>
+            <li>Applied Fourier decomposition methods for spectral data processing and analysis</li>
+          </ul>
+        </div>
+
+        <div class="proj-subsection">
+          <div class="proj-subsection__label">// design rationale</div>
+          <h2 class="proj-subsection__title">Built from Constraints</h2>
+          <p>
+            Every component choice in this spectrometer was driven by the rover's resource
+            constraints. Off-the-shelf spectrometers cost thousands of dollars and weigh
+            far too much for integration into a competition rover. This device was designed
+            to be manufacturable for under $200 using parts sourced from robotics suppliers
+            and 3D-printed structural components.
+          </p>
+          <p>
+            The rack-and-pinion sample stage was chosen over a servo-driven turntable
+            because it provides precise, repeatable linear positioning without backlash —
+            critical for keeping each cuvette aligned with the optical axis during measurement.
+            The diffraction geometry at 47° was selected through iterative ray-tracing
+            analysis to produce the widest usable spectral spread across the camera sensor.
+          </p>
+        </div>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="proj-sidebar">
+        <div class="proj-sidebar__card">
+          <h4>Project Info</h4>
+          <div class="card__row"><span>team</span><span>Yale Robotics</span></div>
+          <div class="card__row"><span>sub-team</span><span>Science / Sensors</span></div>
+          <div class="card__row"><span>timeline</span><span>2024 — Present</span></div>
+          <div class="card__row"><span>samples</span><span>3 cuvettes</span></div>
+          <div class="card__row"><span>sensor</span><span>Raspberry Pi Camera</span></div>
+          <div class="card__row"><span>optics</span><span>Diffraction @ 47°</span></div>
+          <div class="card__row"><span>actuation</span><span>Rack &amp; Pinion</span></div>
+          <div class="card__row"><span>housing</span><span>Light-sealed 3D print</span></div>
+        </div>
+
+        <div class="proj-sidebar__card">
+          <h4>Other Projects</h4>
+          <a href="mars-rover.html" class="proj-other-link">
+            <span>Mars Rover System</span>
+            <span class="proj-other-link__num">P-01</span>
+          </a>
+          <a href="prosthetics.html" class="proj-other-link">
+            <span>Pediatric Prosthetic</span>
+            <span class="proj-other-link__num">P-02</span>
+          </a>
+          <a href="ornl.html" class="proj-other-link">
+            <span>ORNL · ML &amp; Materials</span>
+            <span class="proj-other-link__num">P-05</span>
+          </a>
+          <a href="research.html" class="proj-other-link">
+            <span>PINN Research</span>
+            <span class="proj-other-link__num">P-03/06</span>
+          </a>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__row">
+      <span class="footer__sig">// designed &amp; built by Murat Khidoyatov</span>
+      <span class="footer__year">© 2026</span>
+    </div>
+    <div class="footer__links">
+      <a href="mailto:murat.khidoyatov@yale.edu">email</a>
+      <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com" target="_blank" rel="noopener">github</a>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
