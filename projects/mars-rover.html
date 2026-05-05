@@ -62,7 +62,7 @@
 
   <!-- 4-DoF Arm Simulator -->
   <div class="arm-demo">
-    <div class="arm-demo__label">// interactive · 4-DoF kinematic simulator · drag canvas to orbit</div>
+    <div class="arm-demo__label">// interactive · 4-DoF kinematic simulator · 1:1 JS port of the Python controller written for the physical arm · drag canvas to orbit</div>
     <canvas id="armCanvas" aria-label="Interactive 4-DoF robotic arm simulator"></canvas>
     <div class="arm-demo__controls">
       <div class="arm-demo__toprow">
@@ -71,7 +71,7 @@
       </div>
       <div class="arm-demo__sliders" id="armSliders"></div>
     </div>
-    <p class="proj-images__caption">// same FK / IK algorithm from the Python simulator, ported to the browser · drag to orbit · IK uses the same analytic solver</p>
+    <p class="proj-images__caption">// exact 1:1 port of the Python FK / IK controller written for the physical arm — same analytic geometric solver, same IK convergence gain (0.08), same joint limits</p>
   </div>
 
   <!-- Body -->
@@ -229,12 +229,12 @@
 
     function resize() {
       W  = canvas.parentElement.clientWidth;
-      H  = Math.round(W * 0.72);
+      H  = Math.round(W * 0.46);
       canvas.width  = W;
       canvas.height = H;
       CX = W / 2;
-      CY = H * 0.60;
-      S  = Math.min(W, H) * 0.215;
+      CY = H * 0.58;
+      S  = Math.min(W, H) * 0.38;
     }
 
     /* ── Orthographic 3-D projection ──────────────────────────────────── */
