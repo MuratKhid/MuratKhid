@@ -60,6 +60,20 @@
     <p class="proj-images__caption">// Left: rover chassis assembly · Right: 4-DOF robotic arm validation</p>
   </div>
 
+  <!-- 4-DoF Arm Simulator -->
+  <div class="arm-demo">
+    <div class="arm-demo__label">// interactive · 4-DoF kinematic simulator · drag canvas to orbit</div>
+    <canvas id="armCanvas" aria-label="Interactive 4-DoF robotic arm simulator"></canvas>
+    <div class="arm-demo__controls">
+      <div class="arm-demo__toprow">
+        <button class="arm-demo__btn" id="armModeBtn">Switch to FK mode →</button>
+        <span class="arm-demo__hint" id="armHint">IK mode — sliders set the target position · arm tracks smoothly</span>
+      </div>
+      <div class="arm-demo__sliders" id="armSliders"></div>
+    </div>
+    <p class="proj-images__caption">// same FK / IK algorithm from the Python simulator, ported to the browser · drag to orbit · IK uses the same analytic solver</p>
+  </div>
+
   <!-- Body -->
   <div class="proj-body">
     <div class="proj-body__grid">
@@ -180,5 +194,352 @@
   </footer>
 
   <script src="../script.js"></script>
+  <script>
+  /* ── 4-DoF Rover Arm Kinematic Simulator ─────────────────────────────────
+     Direct port of the Python FK / IK code. Same link lengths, same analytic
+     IK solver, same 0.08 convergence gain.                                   */
+  (function () {
+    'use strict';
+
+    const canvas = document.getElementById('armCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    /* ── Physics constants (matching Python) ───────────────────────────── */
+    const LINKS   = [0.4, 0.4, 0.4];     // L1, L2, L3
+    const IK_GAIN = 0.08;                 // convergence speed
+    const TRAIL   = 140;                  // end-effector history length
+
+    /* ── Simulation state ─────────────────────────────────────────────── */
+    let q        = [0, Math.PI/4, Math.PI/6, Math.PI/4]; // [yaw, sh, elbow, wrist]
+    let target   = [0.5, 0.0, 0.5];
+    let tYaw     = Math.atan2(0.0, 0.5);
+    let tPitch   = 0;
+    let mode     = 'ik';  // 'ik' | 'fk'
+    let trail    = [];
+
+    /* ── Camera state ─────────────────────────────────────────────────── */
+    let camAzim    = 30  * Math.PI / 180;
+    let camElev    = 22  * Math.PI / 180;
+    let isDragging = false;
+    let lastXY     = [0, 0];
+
+    /* ── Canvas dimensions (set by resize) ───────────────────────────── */
+    let W, H, CX, CY, S;  // S = scale (px per metre)
+
+    function resize() {
+      W  = canvas.parentElement.clientWidth;
+      H  = Math.round(W * 0.72);
+      canvas.width  = W;
+      canvas.height = H;
+      CX = W / 2;
+      CY = H * 0.60;
+      S  = Math.min(W, H) * 0.215;
+    }
+
+    /* ── Orthographic 3-D projection ──────────────────────────────────── */
+    function proj([x, y, z]) {
+      const cosA = Math.cos(camAzim), sinA = Math.sin(camAzim);
+      const cosE = Math.cos(camElev), sinE = Math.sin(camElev);
+      const sx =  -sinA * x + cosA * y;
+      const sy =  (-sinE * cosA) * x + (-sinE * sinA) * y + cosE * z;
+      return [CX + sx * S, CY - sy * S];
+    }
+
+    /* ── Forward kinematics (exact Python port) ──────────────────────── */
+    function fk(q) {
+      const [q0, q1, q2, q3] = q;
+      const [L1, L2, L3]     = LINKS;
+      const th1 = q1, th2 = q1 + q2, th3 = q1 + q2 + q3;
+      const x1p = L1*Math.cos(th1), z1 = L1*Math.sin(th1);
+      const x2p = x1p + L2*Math.cos(th2), z2 = z1 + L2*Math.sin(th2);
+      const x3p = x2p + L3*Math.cos(th3), z3 = z2 + L3*Math.sin(th3);
+      const c0  = Math.cos(q0), s0 = Math.sin(q0);
+      return [
+        [0,        0,        0 ],
+        [c0*x1p,   s0*x1p,   z1],
+        [c0*x2p,   s0*x2p,   z2],
+        [c0*x3p,   s0*x3p,   z3],
+      ];
+    }
+
+    /* ── Inverse kinematics (exact Python port) ──────────────────────── */
+    function ik(pos, yaw, pitch) {
+      const [x, y, z]  = pos;
+      const [L1, L2, L3] = LINKS;
+      const q0 = yaw;
+      const c0 = Math.cos(-q0), s0 = Math.sin(-q0);
+      const xp = c0*x - s0*y, zp = z;
+      const wx = xp - L3*Math.cos(pitch), wz = zp - L3*Math.sin(pitch);
+      const r2 = wx*wx + wz*wz;
+      let cosQ2 = (r2 - L1*L1 - L2*L2) / (2*L1*L2);
+      if (cosQ2 < -1 || cosQ2 > 1) return null;
+      cosQ2   = Math.max(-1, Math.min(1, cosQ2));
+      const q2    = Math.acos(cosQ2);
+      const beta  = Math.atan2(wz, wx);
+      const gamma = Math.atan2(L2*Math.sin(q2), L1 + L2*Math.cos(q2));
+      const q1    = beta - gamma;
+      const q3    = pitch - q1 - q2;
+      return [q0, q1, q2, q3];
+    }
+
+    /* ── Theme colors ─────────────────────────────────────────────────── */
+    function clr() {
+      const s = getComputedStyle(document.documentElement);
+      const v = k => s.getPropertyValue(k).trim();
+      return {
+        accent: v('--accent')      || '#c8ff5e',
+        bg:     v('--bg')          || '#0a0b0d',
+        muted:  v('--text-muted')  || '#4b5563',
+        dim:    v('--text-dim')    || '#8b929e',
+      };
+    }
+
+    /* ── Drawing helpers ──────────────────────────────────────────────── */
+    function drawGrid() {
+      ctx.setLineDash([2, 7]);
+      ctx.strokeStyle = 'rgba(255,255,255,0.045)';
+      ctx.lineWidth = 0.5;
+      const R = 1.2, step = 0.3;
+      for (let i = -R; i <= R + 0.001; i += step) {
+        const t = Math.round(i * 10) / 10;
+        let a = proj([t, -R, 0]), b = proj([t,  R, 0]);
+        ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+        a = proj([-R, t, 0]);    b = proj([ R, t, 0]);
+        ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+
+    function drawWorkspace() {
+      const maxR = LINKS[0] + LINKS[1] + LINKS[2];
+      const N = 60;
+      ctx.setLineDash([2, 5]);
+      ctx.strokeStyle = 'rgba(200,255,94,0.07)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const a  = (i / N) * Math.PI * 2;
+        const pt = proj([maxR * Math.cos(a), maxR * Math.sin(a), 0]);
+        i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawAxes() {
+      const L = 0.32, s = W / 760;
+      const defs = [
+        { d: [L, 0, 0], c: '#ff5555', lbl: 'X' },
+        { d: [0, L, 0], c: '#55cc55', lbl: 'Y' },
+        { d: [0, 0, L], c: '#5599ff', lbl: 'Z' },
+      ];
+      const o = proj([0,0,0]);
+      for (const ax of defs) {
+        const t = proj(ax.d);
+        ctx.strokeStyle = ax.c + '99'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(o[0],o[1]); ctx.lineTo(t[0],t[1]); ctx.stroke();
+        ctx.fillStyle = ax.c + 'bb';
+        ctx.font = `${Math.max(8, Math.round(9*s))}px 'JetBrains Mono', monospace`;
+        ctx.fillText(ax.lbl, t[0]+4, t[1]-3);
+      }
+    }
+
+    function drawTrail(C) {
+      for (let i = 1; i < trail.length; i++) {
+        const a = proj(trail[i-1]), b = proj(trail[i]);
+        const alpha = (i / trail.length) * 0.45;
+        ctx.strokeStyle = `rgba(200,255,94,${alpha})`;
+        ctx.lineWidth   = 1.5;
+        ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+      }
+    }
+
+    function drawArm(joints, C) {
+      const pts = joints.map(proj);
+
+      /* links */
+      ctx.save();
+      ctx.shadowColor = C.accent; ctx.shadowBlur = 14;
+      ctx.strokeStyle = C.accent; ctx.lineWidth = 3.5 * W/760;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      pts.forEach((p, i) => i === 0 ? ctx.moveTo(p[0],p[1]) : ctx.lineTo(p[0],p[1]));
+      ctx.stroke();
+      ctx.restore();
+
+      /* joints */
+      pts.forEach((p, i) => {
+        const r = (i === 0 ? 6 : 5) * W/760;
+        ctx.save();
+        ctx.shadowColor = C.accent; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, Math.PI*2);
+        ctx.fillStyle = i === pts.length-1 ? C.accent : '#e8eaed';
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+
+    function drawTarget(C) {
+      const pt  = proj(target);
+      const sz  = 8 * W/760;
+      ctx.save();
+      ctx.shadowColor = '#ff8844'; ctx.shadowBlur = 14;
+      ctx.strokeStyle = '#ff8844'; ctx.lineWidth = 2 * W/760;
+      ctx.beginPath();
+      ctx.moveTo(pt[0]-sz, pt[1]-sz); ctx.lineTo(pt[0]+sz, pt[1]+sz);
+      ctx.moveTo(pt[0]+sz, pt[1]-sz); ctx.lineTo(pt[0]-sz, pt[1]+sz);
+      ctx.stroke();
+      ctx.setLineDash([2,4]);
+      ctx.strokeStyle = 'rgba(255,136,68,0.35)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(pt[0], pt[1], sz*1.7, 0, Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+
+    function drawHUD(C, joints) {
+      const fs  = Math.max(9, Math.round(10 * W/760));
+      const ee  = joints[3];
+      const px  = 14 * W/760, py = 12 * W/760;
+      ctx.font         = `${fs}px 'JetBrains Mono', monospace`;
+      ctx.textBaseline = 'top';
+      ctx.fillStyle    = C.muted;
+      ctx.textAlign    = 'left';
+      ctx.fillText(`// ${mode === 'ik' ? 'IK' : 'FK'} mode`, px, py);
+      ctx.textAlign = 'center';
+      ctx.fillText('drag to orbit', W/2, py);
+      ctx.textAlign = 'right';
+      ctx.fillText(`ee (${ee[0].toFixed(2)}, ${ee[1].toFixed(2)}, ${ee[2].toFixed(2)})`, W-px, py);
+    }
+
+    /* ── Slider definitions ───────────────────────────────────────────── */
+    const IK_SLIDERS = [
+      { id:'tx', label:'Target X', min:-1.0, max:1.0,  step:0.01, dflt:0.5,  unit:'',  angle:false },
+      { id:'ty', label:'Target Y', min:-1.0, max:1.0,  step:0.01, dflt:0.0,  unit:'',  angle:false },
+      { id:'tz', label:'Target Z', min:0.05, max:1.0,  step:0.01, dflt:0.5,  unit:'',  angle:false },
+      { id:'tp', label:'Pitch',    min:-75,  max:75,   step:1,    dflt:0,    unit:'°', angle:true  },
+    ];
+    const FK_SLIDERS = [
+      { id:'q0', label:'Base Yaw',   min:-180, max:180, step:1, unit:'°', angle:true },
+      { id:'q1', label:'Shoulder',   min:-85,  max:85,  step:1, unit:'°', angle:true },
+      { id:'q2', label:'Elbow',      min:-85,  max:85,  step:1, unit:'°', angle:true },
+      { id:'q3', label:'Wrist',      min:-85,  max:85,  step:1, unit:'°', angle:true },
+    ];
+
+    function buildSliders() {
+      const grid = document.getElementById('armSliders');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const defs = mode === 'ik' ? IK_SLIDERS : FK_SLIDERS;
+
+      defs.forEach(d => {
+        /* current value */
+        let val;
+        if (mode === 'fk') {
+          const i = parseInt(d.id[1]);
+          val = Math.round(q[i] * 180 / Math.PI);
+        } else {
+          val = d.dflt;
+        }
+
+        const row = document.createElement('div');
+        row.className = 'arm-demo__slider-row';
+        row.innerHTML = `
+          <label>
+            <span>${d.label}</span>
+            <span id="av-${d.id}">${val}${d.unit}</span>
+          </label>
+          <input type="range" id="as-${d.id}"
+            min="${d.min}" max="${d.max}" step="${d.step}" value="${val}">`;
+        grid.appendChild(row);
+
+        document.getElementById(`as-${d.id}`).addEventListener('input', e => {
+          const v = parseFloat(e.target.value);
+          document.getElementById(`av-${d.id}`).textContent = v + d.unit;
+          if (mode === 'ik') {
+            if (d.id === 'tx') { target[0] = v; tYaw = Math.atan2(target[1], target[0]); }
+            if (d.id === 'ty') { target[1] = v; tYaw = Math.atan2(target[1], target[0]); }
+            if (d.id === 'tz')   target[2] = v;
+            if (d.id === 'tp')   tPitch    = v * Math.PI / 180;
+          } else {
+            q[parseInt(d.id[1])] = v * Math.PI / 180;
+          }
+        });
+      });
+    }
+
+    /* mode toggle */
+    const modeBtn  = document.getElementById('armModeBtn');
+    const hintSpan = document.getElementById('armHint');
+    if (modeBtn) {
+      modeBtn.addEventListener('click', () => {
+        mode = mode === 'ik' ? 'fk' : 'ik';
+        trail = [];
+        modeBtn.textContent = mode === 'ik' ? 'Switch to FK mode →' : 'Switch to IK mode →';
+        modeBtn.classList.toggle('active', mode === 'fk');
+        hintSpan.textContent = mode === 'ik'
+          ? 'IK mode — sliders set the target position · arm tracks smoothly'
+          : 'FK mode — sliders control each joint angle directly';
+        buildSliders();
+      });
+    }
+
+    /* ── Mouse / touch orbit ──────────────────────────────────────────── */
+    canvas.addEventListener('mousedown',  e => { isDragging = true; lastXY = [e.clientX, e.clientY]; canvas.style.cursor='grabbing'; });
+    window.addEventListener('mouseup',   ()  => { isDragging = false; canvas.style.cursor='grab'; });
+    window.addEventListener('mousemove', e  => {
+      if (!isDragging) return;
+      camAzim -= (e.clientX - lastXY[0]) * 0.009;
+      camElev  = Math.max(0.04, Math.min(Math.PI/2 - 0.04, camElev - (e.clientY - lastXY[1]) * 0.009));
+      lastXY   = [e.clientX, e.clientY];
+    });
+    let lTouch = null;
+    canvas.addEventListener('touchstart', e => { if(e.touches.length===1) lTouch=[e.touches[0].clientX,e.touches[0].clientY]; }, {passive:true});
+    canvas.addEventListener('touchmove',  e => {
+      if(e.touches.length!==1||!lTouch) return;
+      camAzim -= (e.touches[0].clientX - lTouch[0]) * 0.009;
+      camElev  = Math.max(0.04, Math.min(Math.PI/2-0.04, camElev - (e.touches[0].clientY - lTouch[1])*0.009));
+      lTouch   = [e.touches[0].clientX, e.touches[0].clientY];
+    }, {passive:true});
+    canvas.addEventListener('touchend', () => lTouch=null);
+
+    /* ── Animation loop ───────────────────────────────────────────────── */
+    function frame() {
+      /* IK smooth convergence — same logic as Python */
+      if (mode === 'ik') {
+        const qd = ik(target, tYaw, tPitch);
+        if (qd) q = q.map((qi, i) => qi + IK_GAIN * (qd[i] - qi));
+      }
+
+      const joints = fk(q);
+      const ee     = joints[3];
+      trail.push([...ee]);
+      if (trail.length > TRAIL) trail.shift();
+
+      const C = clr();
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = C.bg;
+      ctx.fillRect(0, 0, W, H);
+
+      drawGrid();
+      drawWorkspace();
+      drawAxes();
+      drawTrail(C);
+      if (mode === 'ik') drawTarget(C);
+      drawArm(joints, C);
+      drawHUD(C, joints);
+
+      requestAnimationFrame(frame);
+    }
+
+    /* ── Init ─────────────────────────────────────────────────────────── */
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas.parentElement);
+    resize();
+    buildSliders();
+    document.fonts.ready.then(() => requestAnimationFrame(frame));
+  })();
+  </script>
 </body>
 </html>

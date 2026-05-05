@@ -62,6 +62,13 @@
     <p class="proj-images__caption">// Left: CFD flow around a cylinder (fluid mechanics) · Right: PINN stress field predictions vs. FEA ground truth (solid mechanics)</p>
   </div>
 
+  <!-- Framework Animation -->
+  <div class="framework-viz">
+    <div class="framework-viz__label">// animated · inverse material discovery · optimization loop</div>
+    <canvas id="frameworkCanvas" aria-label="Animated diagram of the inverse material discovery optimization loop"></canvas>
+    <p class="proj-images__caption">// Adam optimizer iteratively updates C1 and D1 until the surrogate model's predicted deformation matches the target — 4 iterations shown</p>
+  </div>
+
   <!-- Body -->
   <div class="proj-body">
     <div class="proj-body__grid">
@@ -215,5 +222,329 @@
   </footer>
 
   <script src="../script.js"></script>
+  <script>
+  /* ── Inverse Material Discovery — animated framework diagram ──────────────
+     Pure Canvas2D, no dependencies. Theme-aware via CSS custom properties.   */
+  (function () {
+    'use strict';
+
+    const canvas = document.getElementById('frameworkCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    /* Convergence data: simulated epochs */
+    const EPOCHS = [
+      { c1: 0.80, d1: 0.35, loss: 0.2847 },
+      { c1: 0.61, d1: 0.28, loss: 0.1203 },
+      { c1: 0.48, d1: 0.22, loss: 0.0421 },
+      { c1: 0.42, d1: 0.19, loss: 0.0087 },
+    ];
+    const CYCLE_MS = 5200; /* ms per iteration */
+
+    /* Layout — unscaled coordinates (designed for W=760) */
+    const RAW = {
+      nodes: {
+        params: { x: 28,  y: 58,  w: 162, h: 82,  lines: ['Material Params'],       accent: false },
+        pull:   { x: 28,  y: 192, w: 162, h: 56,  lines: ['Pull States'],            accent: false },
+        model:  { x: 307, y: 108, w: 168, h: 108, lines: ['Surrogate', 'ML Model'],  accent: true  },
+        pred:   { x: 561, y: 58,  w: 162, h: 82,  lines: ['Predicted', 'Deformation'], accent: false },
+        target: { x: 561, y: 212, w: 162, h: 56,  lines: ['Target', 'Deformation'], accent: false },
+        loss:   { x: 350, y: 322, w: 155, h: 58,  lines: ['MSE Loss'],              accent: false },
+        adam:   { x: 56,  y: 322, w: 178, h: 58,  lines: ['Adam Optimizer'],        accent: false },
+      },
+      /* Edge phases are fractions [0..1] of one CYCLE */
+      edges: [
+        { from: 'params', to: 'model',  phase: [0.05, 0.38] },
+        { from: 'pull',   to: 'model',  phase: [0.05, 0.38] },
+        { from: 'model',  to: 'pred',   phase: [0.38, 0.56] },
+        { from: 'pred',   to: 'loss',   phase: [0.56, 0.72] },
+        { from: 'target', to: 'loss',   phase: [0.56, 0.72] },
+        { from: 'loss',   to: 'adam',   phase: [0.72, 0.86] },
+        { from: 'adam',   to: 'params', phase: [0.86, 1.00], isReturn: true },
+      ],
+    };
+
+    let N = {};   /* scaled nodes */
+    let E = [];   /* scaled edges with bezier control points */
+    let W, H, S;
+
+    /* ── node side helpers ──────────────────────────────────────── */
+    const sides = {
+      right:  n => ({ x: n.x + n.w,       y: n.y + n.h / 2 }),
+      left:   n => ({ x: n.x,             y: n.y + n.h / 2 }),
+      bottom: n => ({ x: n.x + n.w / 2,   y: n.y + n.h     }),
+    };
+
+    function build() {
+      W = canvas.width;
+      H = canvas.height;
+      S = W / 760;
+
+      N = {};
+      for (const [id, r] of Object.entries(RAW.nodes)) {
+        N[id] = { ...r, x: r.x*S, y: r.y*S, w: r.w*S, h: r.h*S };
+      }
+
+      E = RAW.edges.map(re => {
+        const nf = N[re.from], nt = N[re.to];
+        let p0, p1, cp0, cp1;
+
+        if (re.isReturn) {
+          /* adam → params: curve around left edge */
+          p0  = sides.left(nf);
+          p1  = sides.bottom(nt);
+          cp0 = { x: 8*S, y: p0.y + 20*S };
+          cp1 = { x: 8*S, y: p1.y - 20*S };
+        } else if (re.from === 'pred' && re.to === 'loss') {
+          /* pred (bottom) → loss (right): L-shaped */
+          p0  = sides.bottom(nf);
+          p1  = { x: N.loss.x + N.loss.w, y: N.loss.y + N.loss.h / 2 };
+          cp0 = { x: p0.x, y: p1.y };
+          cp1 = { x: p1.x + 20*S, y: p1.y };
+        } else if (re.from === 'target' && re.to === 'loss') {
+          /* target (left) → loss (right): horizontal arc  */
+          p0  = sides.left(nf);
+          p1  = { x: N.loss.x + N.loss.w, y: N.loss.y + N.loss.h / 2 };
+          const mx = (p0.x + p1.x) / 2;
+          cp0 = { x: mx, y: p0.y };
+          cp1 = { x: mx, y: p1.y };
+        } else {
+          /* default: horizontal meet-in-the-middle bezier */
+          p0  = sides.right(nf);
+          p1  = sides.left(nt);
+          const mx = (p0.x + p1.x) / 2;
+          cp0 = { x: mx, y: p0.y };
+          cp1 = { x: mx, y: p1.y };
+        }
+        return { ...re, p0, p1, cp0, cp1 };
+      });
+    }
+
+    /* ── cubic bezier point ─────────────────────────────────────── */
+    function bez(e, t) {
+      const u = 1 - t;
+      return {
+        x: u*u*u*e.p0.x + 3*u*u*t*e.cp0.x + 3*u*t*t*e.cp1.x + t*t*t*e.p1.x,
+        y: u*u*u*e.p0.y + 3*u*u*t*e.cp0.y + 3*u*t*t*e.cp1.y + t*t*t*e.p1.y,
+      };
+    }
+
+    /* ── read theme colors ──────────────────────────────────────── */
+    function C() {
+      const s = getComputedStyle(document.documentElement);
+      const v = k => s.getPropertyValue(k).trim();
+      return {
+        accent:  v('--accent')        || '#c8ff5e',
+        bg:      v('--bg')            || '#0a0b0d',
+        bgCard:  v('--bg-card')       || '#14171b',
+        bord:    v('--border')        || 'rgba(255,255,255,0.07)',
+        bordStr: v('--border-strong') || 'rgba(255,255,255,0.14)',
+        text:    v('--text')          || '#e8eaed',
+        dim:     v('--text-dim')      || '#8b929e',
+        muted:   v('--text-muted')    || '#4b5563',
+      };
+    }
+
+    /* ── draw arrowhead at bezier tip ───────────────────────────── */
+    function arrowHead(tip, prev, size, fill) {
+      const a = Math.atan2(tip.y - prev.y, tip.x - prev.x);
+      ctx.beginPath();
+      ctx.moveTo(tip.x, tip.y);
+      ctx.lineTo(tip.x - size * Math.cos(a - 0.42), tip.y - size * Math.sin(a - 0.42));
+      ctx.lineTo(tip.x - size * Math.cos(a + 0.42), tip.y - size * Math.sin(a + 0.42));
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+
+    /* ── main frame ─────────────────────────────────────────────── */
+    let startTime = null;
+
+    function frame(now) {
+      if (!startTime) startTime = now;
+      const elapsed = now - startTime;
+      const epochIdx = Math.floor(elapsed / CYCLE_MS) % EPOCHS.length;
+      const cycleT   = (elapsed % CYCLE_MS) / CYCLE_MS; /* 0..1 */
+
+      const clr = C();
+      ctx.clearRect(0, 0, W, H);
+
+      /* background */
+      ctx.fillStyle = clr.bg;
+      ctx.fillRect(0, 0, W, H);
+
+      /* subtle grid */
+      ctx.strokeStyle = 'rgba(255,255,255,0.028)';
+      ctx.lineWidth = 0.5;
+      const gs = 32 * S;
+      for (let x = gs / 2; x < W; x += gs) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let y = gs / 2; y < H; y += gs) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+      /* edge activity alpha — bell curve over its phase window */
+      function edgeAlpha(e) {
+        const [p0, p1] = e.phase;
+        if (cycleT < p0 || cycleT > p1) return 0;
+        const mid  = (p0 + p1) / 2;
+        const half = (p1 - p0) / 2;
+        return 1 - Math.pow((cycleT - mid) / half, 2);
+      }
+
+      /* node glow — max alpha of connected edges */
+      function nodeGlow(id) {
+        return E.reduce((m, e) => (e.from === id || e.to === id) ? Math.max(m, edgeAlpha(e)) : m, 0);
+      }
+
+      /* ── EDGES ────────────────────────────────────────────────── */
+      for (const e of E) {
+        const a = edgeAlpha(e);
+        const active = a > 0;
+
+        ctx.beginPath();
+        ctx.moveTo(e.p0.x, e.p0.y);
+        ctx.bezierCurveTo(e.cp0.x, e.cp0.y, e.cp1.x, e.cp1.y, e.p1.x, e.p1.y);
+
+        if (active) {
+          ctx.strokeStyle = `rgba(200,255,94,${0.15 + 0.45 * a})`;
+          ctx.lineWidth   = (1.5 + a * 0.8) * S;
+          ctx.setLineDash([]);
+        } else {
+          ctx.strokeStyle = 'rgba(255,255,255,0.065)';
+          ctx.lineWidth   = S;
+          ctx.setLineDash([4 * S, 8 * S]);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        /* arrowhead */
+        const tip  = bez(e, 0.995);
+        const near = bez(e, 0.960);
+        arrowHead(tip, near, 7 * S, active ? `rgba(200,255,94,${0.45 + 0.45 * a})` : 'rgba(255,255,255,0.10)');
+
+        /* flowing particles */
+        if (active) {
+          const localT = (cycleT - e.phase[0]) / (e.phase[1] - e.phase[0]);
+          const COUNT = 5;
+          for (let i = 0; i < COUNT; i++) {
+            const pt  = (localT + i / COUNT) % 1;
+            const pos = bez(e, pt);
+            const fade = Math.sin(pt * Math.PI) * a;
+            ctx.save();
+            ctx.shadowColor = '#c8ff5e';
+            ctx.shadowBlur  = 10 * S;
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 3.2 * S, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(200,255,94,${fade * 0.95})`;
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+      }
+
+      /* ── Dynamic display values ───────────────────────────────── */
+      const iter     = EPOCHS[epochIdx];
+      const nextIter = EPOCHS[Math.min(epochIdx + 1, EPOCHS.length - 1)];
+      const updateP  = cycleT > 0.87 ? (cycleT - 0.87) / 0.13 : 0;
+      const lossP    = cycleT > 0.68 ? Math.min(1, (cycleT - 0.68) / 0.14) : 0;
+      const showLoss = cycleT > 0.56;
+
+      const c1_disp   = iter.c1   + (nextIter.c1   - iter.c1)   * updateP;
+      const d1_disp   = iter.d1   + (nextIter.d1   - iter.d1)   * updateP;
+      const loss_disp = iter.loss + (nextIter.loss  - iter.loss) * lossP;
+
+      const subtexts = {
+        params: `C1 = ${c1_disp.toFixed(2)}   D1 = ${d1_disp.toFixed(2)}`,
+        pull:   '10% · 15% · 25%',
+        model:  null,
+        pred:   'û(x, y)',
+        target: 'u(x, y)',
+        loss:   showLoss ? `L = ${loss_disp.toFixed(4)}` : '',
+        adam:   '→  Δ C1,  Δ D1',
+      };
+
+      /* ── NODES ────────────────────────────────────────────────── */
+      const fs   = Math.max(9,  Math.round(11 * S));
+      const sfs  = Math.max(8,  Math.round(9.5 * S));
+      const lh   = fs * 1.4;
+      const r    = 5 * S;
+
+      for (const [id, n] of Object.entries(N)) {
+        const glow = nodeGlow(id);
+
+        ctx.save();
+        if (n.accent) { ctx.shadowColor = '#c8ff5e'; ctx.shadowBlur = 20 * S; }
+        else if (glow > 0.15) { ctx.shadowColor = 'rgba(200,255,94,0.35)'; ctx.shadowBlur = 12 * S * glow; }
+
+        /* box */
+        ctx.beginPath();
+        ctx.roundRect(n.x, n.y, n.w, n.h, r);
+        ctx.fillStyle = n.accent
+          ? `rgba(200,255,94,${0.04 + 0.04 * glow})`
+          : (glow > 0.1 ? `rgba(20,23,27,${0.85 + 0.15 * glow})` : clr.bgCard);
+        ctx.fill();
+
+        ctx.strokeStyle = n.accent
+          ? `rgba(200,255,94,${0.45 + 0.4 * glow})`
+          : (glow > 0.1 ? `rgba(200,255,94,${0.2 + 0.55 * glow})` : clr.bordStr);
+        ctx.lineWidth = (n.accent ? 1.5 : 1) * S;
+        ctx.stroke();
+        ctx.restore();
+
+        /* main label text */
+        ctx.font        = `${fs}px 'JetBrains Mono', monospace`;
+        ctx.textAlign   = 'center';
+        ctx.fillStyle   = n.accent ? clr.accent : (glow > 0.2 ? '#fff' : clr.text);
+        const cx = n.x + n.w / 2;
+        const sub = subtexts[id];
+        const totalTextH = n.lines.length * lh;
+        const baseY = sub
+          ? n.y + n.h / 2 - (totalTextH / 2) - sfs * 0.6
+          : n.y + n.h / 2 - totalTextH / 2 + lh / 2;
+
+        n.lines.forEach((line, i) => {
+          ctx.textBaseline = 'middle';
+          ctx.fillText(line, cx, baseY + i * lh);
+        });
+
+        /* subtext */
+        if (sub) {
+          ctx.font      = `${sfs}px 'JetBrains Mono', monospace`;
+          ctx.fillStyle = (id === 'loss' && showLoss)
+            ? `rgba(200,255,94,${0.5 + 0.5 * lossP})`
+            : (id === 'params' && updateP > 0)
+              ? `rgba(200,255,94,${0.4 + 0.5 * updateP})`
+              : clr.muted;
+          ctx.textBaseline = 'middle';
+          ctx.fillText(sub, cx, n.y + n.h - sfs * 1.15);
+        }
+      }
+
+      /* ── HUD: iteration counter ───────────────────────────────── */
+      const hfs = Math.max(9, Math.round(10 * S));
+      ctx.font         = `${hfs}px 'JetBrains Mono', monospace`;
+      ctx.textAlign    = 'right';
+      ctx.textBaseline = 'top';
+      ctx.fillStyle    = clr.muted;
+      ctx.fillText(`// iteration ${epochIdx + 1} / ${EPOCHS.length}`, W - 14 * S, 11 * S);
+
+      requestAnimationFrame(frame);
+    }
+
+    /* ── Resize observer ─────────────────────────────────────────── */
+    function resize() {
+      const parent = canvas.parentElement;
+      const cw     = parent.clientWidth;
+      canvas.width  = cw;
+      canvas.height = Math.round(cw * 0.52);
+      build();
+    }
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas.parentElement);
+    resize();
+
+    /* Wait for fonts before first paint */
+    document.fonts.ready.then(() => requestAnimationFrame(frame));
+  })();
+  </script>
 </body>
 </html>
