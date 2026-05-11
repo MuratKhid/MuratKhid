@@ -32,6 +32,6 @@ Fab          FDM 3D Printing · Sheet Metal · DFM
 
 ### Find me
 
-- **Portfolio** — [muratkhid.github.io](https://muratkhid.github.io)
+- **Portfolio** — [muratkhid.github.io](https://muratkhid.github.io/MuratKhid/)
 - **LinkedIn** — [linkedin.com/in/muratkhid](https://www.linkedin.com/in/muratkhid)
 - **Email** — murat.khidoyatov@yale.edu
