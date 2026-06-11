@@ -31,6 +31,9 @@
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
+  <!-- Scroll progress -->
+  <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__fill" id="scrollProgress"></div></div>
+
   <!-- Top nav -->
   <header class="nav">
     <a href="#" class="nav__brand">
@@ -45,10 +48,24 @@
       <a href="#gallery"><span class="nav__num">04</span>gallery</a>
       <a href="#resume"><span class="nav__num">05</span>resume</a>
     </nav>
-    <button class="nav__theme" id="themeToggle" aria-label="Toggle theme">
-      <span class="theme-icon">◐</span>
-    </button>
+    <div class="nav__actions">
+      <button class="nav__theme" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">◐</span>
+      </button>
+      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
+
+  <!-- Mobile menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="#about"><span class="nav__num">01</span>about</a>
+    <a href="#research"><span class="nav__num">02</span>research</a>
+    <a href="#projects"><span class="nav__num">03</span>projects</a>
+    <a href="#gallery"><span class="nav__num">04</span>gallery</a>
+    <a href="#resume"><span class="nav__num">05</span>resume</a>
+  </nav>
 
   <!-- HERO -->
   <section class="hero">
@@ -88,6 +105,28 @@
       <div class="meta__col">
         <span class="meta__label">// contact</span>
         <a class="meta__value meta__link" href="mailto:murat.khidoyatov@yale.edu">murat.khidoyatov@yale.edu</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT METRICS -->
+  <section class="stats" aria-label="Impact metrics">
+    <div class="stats__grid">
+      <div class="stat">
+        <span class="stat__value"><span class="stat__num" data-count="96">0</span>%</span>
+        <span class="stat__label">ML surrogate model accuracy @ ORNL</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value"><span class="stat__num" data-count="66">0</span>%</span>
+        <span class="stat__label">process cycle time reduction via DFM tooling</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">$<span class="stat__num" data-count="5">0</span>K+</span>
+        <span class="stat__label">project funding secured for pediatric prosthetics</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value"><span class="stat__num" data-count="100">0</span>+</span>
+        <span class="stat__label">alloy samples structurally characterized</span>
       </div>
     </div>
   </section>
@@ -205,6 +244,9 @@
 
     <div class="projects__grid">
       <article class="project">
+        <a href="projects/mars-rover.html" class="project__thumb">
+          <img src="img/rover-deployment.jpg" alt="Mars rover chassis assembly" loading="lazy" />
+        </a>
         <div class="project__index">P-01</div>
         <h3 class="project__title">Mars Rover Life-Detection System</h3>
         <p class="project__role">Lead Engineer · Yale Undergraduate Robotics</p>
@@ -221,6 +263,9 @@
       </article>
 
       <article class="project">
+        <a href="projects/prosthetics.html" class="project__thumb">
+          <img src="img/prosthetic-glove.jpg" alt="Pediatric prosthetic limb prototype" loading="lazy" />
+        </a>
         <div class="project__index">P-02</div>
         <h3 class="project__title">Pediatric Prosthetic Limb</h3>
         <p class="project__role">Team Lead · Yale AID</p>
@@ -237,6 +282,9 @@
       </article>
 
       <article class="project">
+        <a href="projects/research.html" class="project__thumb">
+          <img src="img/flow-CFD.jpg" alt="CFD simulation of flow around a cylinder" loading="lazy" />
+        </a>
         <div class="project__index">P-03</div>
         <h3 class="project__title">CFD-Trained PINN Pipeline</h3>
         <p class="project__role">Research · Humphrey Lab</p>
@@ -253,6 +301,9 @@
       </article>
 
       <article class="project">
+        <a href="projects/spectrometer.html" class="project__thumb">
+          <img src="img/spectrometer.jpg" alt="Custom spectrometer build" loading="lazy" />
+        </a>
         <div class="project__index">P-04</div>
         <h3 class="project__title">Custom Spectrometer</h3>
         <p class="project__role">Yale Robotics · Science Sub-team</p>
@@ -268,6 +319,9 @@
       </article>
 
       <article class="project">
+        <a href="projects/ornl.html" class="project__thumb">
+          <img src="img/ornl-lab.jpg" alt="Oak Ridge National Lab research" loading="lazy" />
+        </a>
         <div class="project__index">P-05</div>
         <h3 class="project__title">Nuclear Material Handling Tooling</h3>
         <p class="project__role">Oak Ridge National Lab · R&amp;D Intern</p>
@@ -284,6 +338,9 @@
       </article>
 
       <article class="project">
+        <a href="projects/research.html" class="project__thumb">
+          <img src="img/pinn-results.jpg" alt="PINN material prediction results" loading="lazy" />
+        </a>
         <div class="project__index">P-06</div>
         <h3 class="project__title">Constitutive Equation Discovery</h3>
         <p class="project__role">Research · Humphrey Lab</p>
@@ -336,7 +393,7 @@
           <figcaption><span class="cap__num">05</span>Pediatric prosthetic limb</figcaption>
         </figure>
         <figure class="hscroll__slide">
-          <img src="img/PINN-results.jpg" alt="ML material prediction" loading="lazy" />
+          <img src="img/pinn-results.jpg" alt="ML material prediction" loading="lazy" />
           <figcaption><span class="cap__num">06</span>ML material prediction</figcaption>
         </figure>
         <figure class="hscroll__slide">
@@ -395,7 +452,7 @@
     <div class="footer__links">
       <a href="mailto:murat.khidoyatov@yale.edu">email</a>
       <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">linkedin</a>
-      <a href="https://github.com" target="_blank" rel="noopener">github</a>
+      <a href="https://github.com/muratkhid" target="_blank" rel="noopener">github</a>
     </div>
   </footer>
 
