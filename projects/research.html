@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
   <link rel="icon" type="image/jpeg" href="../img/headshot.jpg" />
 </head>
@@ -17,22 +17,30 @@
   <div class="noise" aria-hidden="true"></div>
 
   <header class="nav">
-    <a href="../" class="nav__brand">
-      <span class="brand__bracket">[</span>
-      <span class="brand__name">murat.khidoyatov</span>
-      <span class="brand__bracket">]</span>
-    </a>
+    <a href="../" class="nav__brand">Murat Khidoyatov</a>
     <nav class="nav__links">
-      <a href="../#about"><span class="nav__num">01</span>about</a>
-      <a href="../#research"><span class="nav__num">02</span>research</a>
-      <a href="../#projects"><span class="nav__num">03</span>projects</a>
-      <a href="../#gallery"><span class="nav__num">04</span>gallery</a>
-      <a href="../#resume"><span class="nav__num">05</span>resume</a>
+      <a href="../#about">About</a>
+      <a href="../#research">Research</a>
+      <a href="../#projects">Projects</a>
+      <a href="../#gallery">Gallery</a>
+      <a href="../#resume">Résumé</a>
     </nav>
-    <button class="nav__theme" id="themeToggle" aria-label="Toggle theme">
-      <span class="theme-icon">◐</span>
-    </button>
+    <div class="nav__actions">
+      <button class="nav__theme" id="themeToggle" aria-label="Switch color theme">blueprint</button>
+      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
+
+  <!-- Mobile menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="../#about">About</a>
+    <a href="../#research">Research</a>
+    <a href="../#projects">Projects</a>
+    <a href="../#gallery">Gallery</a>
+    <a href="../#resume">Résumé</a>
+  </nav>
 
   <!-- Hero -->
   <section class="section proj-hero">
@@ -59,14 +67,14 @@
       <img src="../img/flow-CFD.jpg" alt="CFD simulation — flow around a cylinder" />
       <img src="../img/PINN-results.jpg" alt="PINN predictions vs FEA ground truth" />
     </div>
-    <p class="proj-images__caption">// Left: CFD flow around a cylinder (fluid mechanics) · Right: PINN stress field predictions vs. FEA ground truth (solid mechanics)</p>
+    <p class="proj-images__caption">Left: CFD flow around a cylinder (fluid mechanics) · Right: PINN stress field predictions vs. FEA ground truth (solid mechanics)</p>
   </div>
 
   <!-- Framework Animation -->
   <div class="framework-viz">
-    <div class="framework-viz__label">// animated · inverse material discovery · optimization loop</div>
+    <div class="framework-viz__label">animated · inverse material discovery · optimization loop</div>
     <canvas id="frameworkCanvas" aria-label="Animated diagram of the inverse material discovery optimization loop"></canvas>
-    <p class="proj-images__caption">// Adam optimizer iteratively updates C1 and D1 until the surrogate model's predicted deformation matches the target — 4 iterations shown</p>
+    <p class="proj-images__caption">Adam optimizer iteratively updates C1 and D1 until the surrogate model's predicted deformation matches the target — 4 iterations shown</p>
   </div>
 
   <!-- Body -->
@@ -76,7 +84,7 @@
       <main>
         <!-- Shared architecture -->
         <div class="proj-subsection">
-          <div class="proj-subsection__label">// core idea</div>
+          <div class="proj-subsection__label">core idea</div>
           <h2 class="proj-subsection__title">One Architecture, Two Physics Domains</h2>
           <p>
             The same neural network architecture — a physics-informed neural network (PINN)
@@ -97,7 +105,7 @@
 
         <!-- Sub-project 1: CFD -->
         <div class="proj-subsection">
-          <div class="proj-subsection__label">// domain · 01 — fluid mechanics</div>
+          <div class="proj-subsection__label">domain · 01 — fluid mechanics</div>
           <h2 class="proj-subsection__title">CFD Pipeline for Flow Around a Cylinder</h2>
           <p>
             To generate ground-truth training data for the fluid mechanics PINN, I built a
@@ -114,7 +122,7 @@
             and parameter sweeps that would be prohibitively slow on CPU.
           </p>
 
-          <p class="proj-bullets__label">// what I did</p>
+          <p class="proj-bullets__label">what I did</p>
           <ul class="proj-bullets">
             <li>Built a Python CFD simulation of viscous flow around a cylinder to generate labeled training datasets</li>
             <li>Implemented physics-based loss terms enforcing the Navier-Stokes equations via automatic differentiation</li>
@@ -126,7 +134,7 @@
 
         <!-- Sub-project 2: Solid mechanics PINN -->
         <div class="proj-subsection">
-          <div class="proj-subsection__label">// domain · 02 — solid mechanics</div>
+          <div class="proj-subsection__label">domain · 02 — solid mechanics</div>
           <h2 class="proj-subsection__title">Constitutive Equation Discovery for Hyperelastic Materials</h2>
           <p>
             For solid mechanics, I developed a two-network architecture in JAX and PyTorch
@@ -145,7 +153,7 @@
             problems. This work is the basis of a paper currently pending submission.
           </p>
 
-          <p class="proj-bullets__label">// what I did</p>
+          <p class="proj-bullets__label">what I did</p>
           <ul class="proj-bullets">
             <li>Architected a dual-network system: one network for displacement fields, one for the learned energy function</li>
             <li>Implemented physics-based loss functions enforcing equilibrium equations and material frame indifference</li>
@@ -160,7 +168,7 @@
         <!-- Publication -->
         <div class="proj-subsection">
           <div class="publication">
-            <div class="publication__label">// publication · pending submission</div>
+            <div class="publication__label">publication · pending submission</div>
             <p class="publication__cite">
               Shirani, M., Gueldner, P. H., <strong>Khidoyatov, M.</strong>, Warren, J. L.,
               Ninno, F., &amp; Humphrey, J. D. (2026).
@@ -210,14 +218,35 @@
   </div>
 
   <footer class="footer">
-    <div class="footer__row">
-      <span class="footer__sig">// designed &amp; built by Murat Khidoyatov</span>
-      <span class="footer__year">© 2026</span>
+    <div class="tblock">
+      <div class="tblock__cell tblock__cell--wide">
+        <span class="tblock__title">Murat Khidoyatov — Portfolio</span>
+        <span class="tblock__sub">Designed &amp; built by hand · no template</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Drawn by</span>
+        <span class="tblock__v">M.K.</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Date</span>
+        <span class="tblock__v">2026.07</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Scale</span>
+        <span class="tblock__v">NTS</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Sheet</span>
+        <span class="tblock__v">1 / 1</span>
+      </div>
     </div>
-    <div class="footer__links">
-      <a href="mailto:murat.khidoyatov@yale.edu">email</a>
-      <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">linkedin</a>
-      <a href="https://github.com" target="_blank" rel="noopener">github</a>
+    <div class="footer__row">
+      <span class="footer__sig">© 2026 Murat Khidoyatov</span>
+      <div class="footer__links">
+        <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+        <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
+      </div>
     </div>
   </footer>
 
@@ -331,17 +360,16 @@
 
     /* ── read theme colors ──────────────────────────────────────── */
     function C() {
-      const s = getComputedStyle(document.documentElement);
-      const v = k => s.getPropertyValue(k).trim();
+      // fixed dark "instrument display" palette — independent of page theme
       return {
-        accent:  v('--accent')        || '#c8ff5e',
-        bg:      v('--bg')            || '#0a0b0d',
-        bgCard:  v('--bg-card')       || '#14171b',
-        bord:    v('--border')        || 'rgba(255,255,255,0.07)',
-        bordStr: v('--border-strong') || 'rgba(255,255,255,0.14)',
-        text:    v('--text')          || '#e8eaed',
-        dim:     v('--text-dim')      || '#8b929e',
-        muted:   v('--text-muted')    || '#4b5563',
+        accent:  '#4db8ff',
+        bg:      '#0d1117',
+        bgCard:  '#161c24',
+        bord:    'rgba(255,255,255,0.07)',
+        bordStr: 'rgba(255,255,255,0.14)',
+        text:    '#e8eaed',
+        dim:     '#98a2ad',
+        muted:   '#5c6570',
       };
     }
 
@@ -404,7 +432,7 @@
         ctx.bezierCurveTo(e.cp0.x, e.cp0.y, e.cp1.x, e.cp1.y, e.p1.x, e.p1.y);
 
         if (active) {
-          ctx.strokeStyle = `rgba(200,255,94,${0.15 + 0.45 * a})`;
+          ctx.strokeStyle = `rgba(77,184,255,${0.15 + 0.45 * a})`;
           ctx.lineWidth   = (1.5 + a * 0.8) * S;
           ctx.setLineDash([]);
         } else {
@@ -418,7 +446,7 @@
         /* arrowhead */
         const tip  = bez(e, 0.995);
         const near = bez(e, 0.960);
-        arrowHead(tip, near, 7 * S, active ? `rgba(200,255,94,${0.45 + 0.45 * a})` : 'rgba(255,255,255,0.10)');
+        arrowHead(tip, near, 7 * S, active ? `rgba(77,184,255,${0.45 + 0.45 * a})` : 'rgba(255,255,255,0.10)');
 
         /* flowing particles */
         if (active) {
@@ -429,11 +457,11 @@
             const pos = bez(e, pt);
             const fade = Math.sin(pt * Math.PI) * a;
             ctx.save();
-            ctx.shadowColor = '#c8ff5e';
+            ctx.shadowColor = '#4db8ff';
             ctx.shadowBlur  = 10 * S;
             ctx.beginPath();
             ctx.arc(pos.x, pos.y, 3.2 * S, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(200,255,94,${fade * 0.95})`;
+            ctx.fillStyle = `rgba(77,184,255,${fade * 0.95})`;
             ctx.fill();
             ctx.restore();
           }
@@ -471,20 +499,20 @@
         const glow = nodeGlow(id);
 
         ctx.save();
-        if (n.accent) { ctx.shadowColor = '#c8ff5e'; ctx.shadowBlur = 20 * S; }
-        else if (glow > 0.15) { ctx.shadowColor = 'rgba(200,255,94,0.35)'; ctx.shadowBlur = 12 * S * glow; }
+        if (n.accent) { ctx.shadowColor = '#4db8ff'; ctx.shadowBlur = 20 * S; }
+        else if (glow > 0.15) { ctx.shadowColor = 'rgba(77,184,255,0.35)'; ctx.shadowBlur = 12 * S * glow; }
 
         /* box */
         ctx.beginPath();
         ctx.roundRect(n.x, n.y, n.w, n.h, r);
         ctx.fillStyle = n.accent
-          ? `rgba(200,255,94,${0.04 + 0.04 * glow})`
+          ? `rgba(77,184,255,${0.04 + 0.04 * glow})`
           : (glow > 0.1 ? `rgba(20,23,27,${0.85 + 0.15 * glow})` : clr.bgCard);
         ctx.fill();
 
         ctx.strokeStyle = n.accent
-          ? `rgba(200,255,94,${0.45 + 0.4 * glow})`
-          : (glow > 0.1 ? `rgba(200,255,94,${0.2 + 0.55 * glow})` : clr.bordStr);
+          ? `rgba(77,184,255,${0.45 + 0.4 * glow})`
+          : (glow > 0.1 ? `rgba(77,184,255,${0.2 + 0.55 * glow})` : clr.bordStr);
         ctx.lineWidth = (n.accent ? 1.5 : 1) * S;
         ctx.stroke();
         ctx.restore();
@@ -509,9 +537,9 @@
         if (sub) {
           ctx.font      = `${sfs}px 'JetBrains Mono', monospace`;
           ctx.fillStyle = (id === 'loss' && showLoss)
-            ? `rgba(200,255,94,${0.5 + 0.5 * lossP})`
+            ? `rgba(77,184,255,${0.5 + 0.5 * lossP})`
             : (id === 'params' && updateP > 0)
-              ? `rgba(200,255,94,${0.4 + 0.5 * updateP})`
+              ? `rgba(77,184,255,${0.4 + 0.5 * updateP})`
               : clr.muted;
           ctx.textBaseline = 'middle';
           ctx.fillText(sub, cx, n.y + n.h - sfs * 1.15);

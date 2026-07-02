@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Murat Khidoyatov — Mechanical Engineer & Computational Researcher at Yale University." />
-  <title>Murat Khidoyatov / Engineer & Researcher</title>
+  <title>Murat Khidoyatov — Engineer & Researcher</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/jpeg" href="img/headshot.jpg" />
@@ -20,11 +20,11 @@
   <meta property="og:url" content="https://muratkhid.github.io/" />
   <meta property="og:site_name" content="Murat Khidoyatov" />
 
-<!-- Twitter / X -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Murat Khidoyatov — Engineer & Researcher" />
-<meta name="twitter:description" content="Mechanical engineering meets computational research. Yale '27." />
-<meta name="twitter:image" content="https://muratkhid.github.io/img/headshot.jpg" />
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Murat Khidoyatov — Engineer & Researcher" />
+  <meta name="twitter:description" content="Mechanical engineering meets computational research. Yale '27." />
+  <meta name="twitter:image" content="https://muratkhid.github.io/img/headshot.jpg" />
 </head>
 <body>
   <!-- Background layers -->
@@ -36,22 +36,16 @@
 
   <!-- Top nav -->
   <header class="nav">
-    <a href="#" class="nav__brand">
-      <span class="brand__bracket">[</span>
-      <span class="brand__name">murat.khidoyatov</span>
-      <span class="brand__bracket">]</span>
-    </a>
+    <a href="#" class="nav__brand">Murat Khidoyatov</a>
     <nav class="nav__links">
-      <a href="#about"><span class="nav__num">01</span>about</a>
-      <a href="#research"><span class="nav__num">02</span>research</a>
-      <a href="#projects"><span class="nav__num">03</span>projects</a>
-      <a href="#gallery"><span class="nav__num">04</span>gallery</a>
-      <a href="#resume"><span class="nav__num">05</span>resume</a>
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#projects">Projects</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#resume">Résumé</a>
     </nav>
     <div class="nav__actions">
-      <button class="nav__theme" id="themeToggle" aria-label="Toggle theme">
-        <span class="theme-icon">◐</span>
-      </button>
+      <button class="nav__theme" id="themeToggle" aria-label="Switch color theme">blueprint</button>
       <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -60,73 +54,83 @@
 
   <!-- Mobile menu -->
   <nav class="mobile-menu" id="mobileMenu" aria-hidden="true">
-    <a href="#about"><span class="nav__num">01</span>about</a>
-    <a href="#research"><span class="nav__num">02</span>research</a>
-    <a href="#projects"><span class="nav__num">03</span>projects</a>
-    <a href="#gallery"><span class="nav__num">04</span>gallery</a>
-    <a href="#resume"><span class="nav__num">05</span>resume</a>
+    <a href="#about">About</a>
+    <a href="#research">Research</a>
+    <a href="#projects">Projects</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#resume">Résumé</a>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero__terminal">
-      <div class="terminal__header">
-        <span class="dot dot--red"></span>
-        <span class="dot dot--yellow"></span>
-        <span class="dot dot--green"></span>
-        <span class="terminal__title">~/whoami</span>
-      </div>
-      <div class="terminal__body">
-        <div class="line"><span class="prompt">$</span> <span class="cmd">cat identity.txt</span></div>
-        <div class="line line--out">→ Mechanical Engineer × Computational Researcher</div>
-        <div class="line"><span class="prompt">$</span> <span class="cmd">grep --institution</span></div>
-        <div class="line line--out">→ Yale University · B.S. Mechanical Engineering '27</div>
-        <div class="line"><span class="prompt">$</span> <span class="cmd">ls ./focus/</span></div>
-        <div class="line line--out">CFD/  PINNs/  GPU-acceleration/  aerospace/  mechanism-design/</div>
-        <div class="line"><span class="prompt">$</span> <span class="cursor">_</span></div>
+    <canvas class="hero__canvas" id="flowCanvas" aria-hidden="true"></canvas>
+
+    <div class="hero__inner">
+      <p class="hero__label">Mechanical Engineering × Computational Research — Yale '27</p>
+
+      <h1 class="hero__title">
+        <span class="title__row">Murat</span>
+        <span class="title__row">Khidoyatov<span class="title__dot">.</span></span>
+      </h1>
+
+      <p class="hero__tag">
+        I design mechanisms that survive the real world —
+        and <em>neural networks that respect its physics.</em>
+      </p>
+
+      <div class="hero__meta">
+        <div class="meta__col">
+          <span class="meta__label">Location</span>
+          <span class="meta__value">New Haven, CT</span>
+        </div>
+        <div class="meta__col">
+          <span class="meta__label">Status</span>
+          <span class="meta__value"><span class="pulse"></span>Open to new projects &amp; opportunities</span>
+        </div>
+        <div class="meta__col">
+          <span class="meta__label">Contact</span>
+          <a class="meta__value meta__link" href="mailto:murat.khidoyatov@yale.edu">murat.khidoyatov@yale.edu</a>
+        </div>
       </div>
     </div>
 
-    <h1 class="hero__title">
-      <span class="title__row">Engineering the things</span>
-      <span class="title__row">that don't exist</span>
-      <span class="title__row title__row--accent">yet.</span>
-    </h1>
-
-    <div class="hero__meta">
-      <div class="meta__col">
-        <span class="meta__label">// location</span>
-        <span class="meta__value">New Haven, CT</span>
-      </div>
-      <div class="meta__col">
-        <span class="meta__label">// status</span>
-        <span class="meta__value"><span class="pulse"></span>Open to new projects and opportunities</span>
-      </div>
-      <div class="meta__col">
-        <span class="meta__label">// contact</span>
-        <a class="meta__value meta__link" href="mailto:murat.khidoyatov@yale.edu">murat.khidoyatov@yale.edu</a>
-      </div>
-    </div>
+    <span class="hero__scroll">Scroll ↓</span>
+    <p class="hero__fig">
+      <strong>Fig. 001</strong> — potential flow around a cylinder<br />
+      the cylinder is your cursor
+    </p>
   </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <div class="marquee__seq">
+        <span>CFD</span><i>◆</i><span>Physics-Informed Neural Networks</span><i>◆</i><span>GPU Acceleration</span><i>◆</i><span>Mechanism Design</span><i>◆</i><span>FEA</span><i>◆</i><span>CUDA</span><i>◆</i><span>JAX</span><i>◆</i><span>Bayesian Optimization</span><i>◆</i><span>SolidWorks</span><i>◆</i><span>Aerospace Structures</span><i>◆</i><span>3D Printing</span><i>◆</i>
+      </div>
+      <div class="marquee__seq">
+        <span>CFD</span><i>◆</i><span>Physics-Informed Neural Networks</span><i>◆</i><span>GPU Acceleration</span><i>◆</i><span>Mechanism Design</span><i>◆</i><span>FEA</span><i>◆</i><span>CUDA</span><i>◆</i><span>JAX</span><i>◆</i><span>Bayesian Optimization</span><i>◆</i><span>SolidWorks</span><i>◆</i><span>Aerospace Structures</span><i>◆</i><span>3D Printing</span><i>◆</i>
+      </div>
+    </div>
+  </div>
 
   <!-- IMPACT METRICS -->
   <section class="stats" aria-label="Impact metrics">
     <div class="stats__grid">
       <div class="stat">
-        <span class="stat__value"><span class="stat__num" data-count="96">0</span>%</span>
+        <span class="stat__value"><span class="stat__num" data-count="96">0</span><span class="stat__unit">%</span></span>
         <span class="stat__label">ML surrogate model accuracy @ ORNL</span>
       </div>
       <div class="stat">
-        <span class="stat__value"><span class="stat__num" data-count="66">0</span>%</span>
-        <span class="stat__label">process cycle time reduction via DFM tooling</span>
+        <span class="stat__value"><span class="stat__num" data-count="66">0</span><span class="stat__unit">%</span></span>
+        <span class="stat__label">Process cycle time cut via DFM tooling</span>
       </div>
       <div class="stat">
-        <span class="stat__value">$<span class="stat__num" data-count="5">0</span>K+</span>
-        <span class="stat__label">project funding secured for pediatric prosthetics</span>
+        <span class="stat__value"><span class="stat__unit">$</span><span class="stat__num" data-count="5">0</span>K<span class="stat__unit">+</span></span>
+        <span class="stat__label">Funding secured for pediatric prosthetics</span>
       </div>
       <div class="stat">
-        <span class="stat__value"><span class="stat__num" data-count="100">0</span>+</span>
-        <span class="stat__label">alloy samples structurally characterized</span>
+        <span class="stat__value"><span class="stat__num" data-count="100">0</span><span class="stat__unit">+</span></span>
+        <span class="stat__label">Alloy samples structurally characterized</span>
       </div>
     </div>
   </section>
@@ -134,7 +138,7 @@
   <!-- ABOUT -->
   <section class="section" id="about">
     <div class="section__head">
-      <span class="section__num">01</span>
+      <span class="section__num">SEC. 01</span>
       <h2 class="section__title">About</h2>
       <span class="section__rule"></span>
     </div>
@@ -157,20 +161,35 @@
         </p>
         <p>
           Outside the lab, I lead the Yale Undergraduate Robotics team, where we're
-          designing a Mars rover life-detection system from scratch. I also lead a Yale - Assistive Independent Design (AID) team building custom pediatric prosthetic limbs for local patients.
-          I love creating tools and systems that address real and novel problems, and I'm always looking for new challenges to tackle.
+          designing a Mars rover life-detection system from scratch. I also lead a
+          Yale Assistive Independent Design (AID) team building custom pediatric
+          prosthetic limbs for local patients. I love creating tools and systems that
+          address real and novel problems, and I'm always looking for new challenges
+          to tackle.
         </p>
       </div>
 
-      <aside class="about__card">
-        <div class="card__row"><span>name</span><span>Murat Khidoyatov</span></div>
-        <div class="card__row"><span>role</span><span>Engineer / Researcher</span></div>
-        <div class="card__row"><span>institution</span><span>Yale University</span></div>
-        <div class="card__row"><span>graduating</span><span>May 2027</span></div>
-        <div class="card__row"><span>languages</span><span>Python, C/C++, CUDA</span></div>
-        <div class="card__row"><span>frameworks</span><span>JAX, PyTorch, OPTAX</span></div>
-        <div class="card__row"><span>cad</span><span>SolidWorks, OnShape</span></div>
-        <div class="card__row"><span>simulation</span><span>COMSOL, ABAQUS</span></div>
+      <aside class="about__side">
+        <figure class="about__figure">
+          <img src="img/headshot.jpg" alt="Portrait of Murat Khidoyatov" loading="lazy" />
+          <figcaption>
+            <span>Subject: M. Khidoyatov</span>
+            <span>Scale 1:1</span>
+          </figcaption>
+        </figure>
+
+        <div class="about__card">
+          <div class="about__card-head">Spec Sheet</div>
+          <div class="about__card-body">
+            <div class="card__row"><span>role</span><span>Engineer / Researcher</span></div>
+            <div class="card__row"><span>institution</span><span>Yale University</span></div>
+            <div class="card__row"><span>graduating</span><span>May 2027</span></div>
+            <div class="card__row"><span>languages</span><span>Python, C/C++, CUDA</span></div>
+            <div class="card__row"><span>frameworks</span><span>JAX, PyTorch, OPTAX</span></div>
+            <div class="card__row"><span>cad</span><span>SolidWorks, OnShape</span></div>
+            <div class="card__row"><span>simulation</span><span>COMSOL, ABAQUS</span></div>
+          </div>
+        </div>
       </aside>
     </div>
   </section>
@@ -178,53 +197,57 @@
   <!-- RESEARCH & PUBLICATIONS -->
   <section class="section" id="research">
     <div class="section__head">
-      <span class="section__num">02</span>
-      <h2 class="section__title">Research &amp; Publications</h2>
+      <span class="section__num">SEC. 02</span>
+      <h2 class="section__title">Research</h2>
       <span class="section__rule"></span>
     </div>
 
     <div class="research__list">
       <article class="research__item">
         <div class="research__meta">
-          <span class="tag tag--active">ongoing</span>
+          <span class="tag tag--active">Ongoing</span>
           <span class="research__date">2023 — Present</span>
         </div>
-        <h3 class="research__title">Physics-Informed Neural Networks for Hyperelastic Mechanics</h3>
-        <p class="research__org">Yale Engineering MechanoBiology Lab · Undergraduate Researcher</p>
-        <p class="research__body">
-          Developing a JAX-based dual-network architecture that couples displacement
-          prediction with a learned energy function. Uses automatic differentiation
-          to enforce governing PDEs as soft constraints, achieving 95% accuracy
-          relative to finite element solutions on benchmark deformation problems.
-          GPU-accelerated training reduced iteration time on L4 / A100 hardware.
-        </p>
-        <div class="research__tech">
-          <span>JAX</span><span>PyTorch</span><span>CUDA</span><span>CFD</span><span>PINNs</span><span>Neo-Hookean</span>
+        <div class="research__content">
+          <h3 class="research__title">Physics-Informed Neural Networks for Hyperelastic Mechanics</h3>
+          <p class="research__org">Yale Engineering MechanoBiology Lab · Undergraduate Researcher</p>
+          <p class="research__body">
+            Developing a JAX-based dual-network architecture that couples displacement
+            prediction with a learned energy function. Uses automatic differentiation
+            to enforce governing PDEs as soft constraints, achieving 95% accuracy
+            relative to finite element solutions on benchmark deformation problems.
+            GPU-accelerated training reduced iteration time on L4 / A100 hardware.
+          </p>
+          <div class="research__tech">
+            <span>JAX</span><span>PyTorch</span><span>CUDA</span><span>CFD</span><span>PINNs</span><span>Neo-Hookean</span>
+          </div>
         </div>
       </article>
 
       <article class="research__item">
         <div class="research__meta">
-          <span class="tag">internship</span>
+          <span class="tag">Internship</span>
           <span class="research__date">Summer 2025</span>
         </div>
-        <h3 class="research__title">ML-Driven Alloy Design under Sparse Experimental Data</h3>
-        <p class="research__org">Oak Ridge National Laboratory · Research Intern</p>
-        <p class="research__body">
-          Built ML surrogate models (96% predictive accuracy) integrated with
-          Bayesian Optimization to navigate high-dimensional alloy design spaces.
-          Combined surrogate inference with acquisition functions to efficiently
-          explore noisy datasets near global optima. Validated physical
-          interpretability through feature-response correlation analysis.
-        </p>
-        <div class="research__tech">
-          <span>Python</span><span>Bayesian Optimization</span><span>Random Forest</span><span>Materials</span>
+        <div class="research__content">
+          <h3 class="research__title">ML-Driven Alloy Design under Sparse Experimental Data</h3>
+          <p class="research__org">Oak Ridge National Laboratory · Research Intern</p>
+          <p class="research__body">
+            Built ML surrogate models (96% predictive accuracy) integrated with
+            Bayesian Optimization to navigate high-dimensional alloy design spaces.
+            Combined surrogate inference with acquisition functions to efficiently
+            explore noisy datasets near global optima. Validated physical
+            interpretability through feature-response correlation analysis.
+          </p>
+          <div class="research__tech">
+            <span>Python</span><span>Bayesian Optimization</span><span>Random Forest</span><span>Materials</span>
+          </div>
         </div>
       </article>
     </div>
 
     <div class="publication">
-      <div class="publication__label">// publication · pending submission</div>
+      <div class="publication__label">Publication — Pending Submission</div>
       <p class="publication__cite">
         Shirani, M., Gueldner, P. H., <strong>Khidoyatov, M.</strong>, Warren, J. L.,
         Ninno, F., &amp; Humphrey, J. D. (2026).
@@ -237,168 +260,184 @@
   <!-- PROJECTS -->
   <section class="section" id="projects">
     <div class="section__head">
-      <span class="section__num">03</span>
+      <span class="section__num">SEC. 03</span>
       <h2 class="section__title">Projects</h2>
       <span class="section__rule"></span>
     </div>
 
-    <div class="projects__grid">
-      <article class="project">
-        <a href="projects/mars-rover.html" class="project__thumb">
-          <img src="img/rover-deployment.jpg" alt="Mars rover chassis assembly" loading="lazy" />
-        </a>
-        <div class="project__index">P-01</div>
-        <h3 class="project__title">Mars Rover Life-Detection System</h3>
-        <p class="project__role">Lead Engineer · Yale Undergraduate Robotics</p>
-        <p class="project__body">
+    <article class="prow">
+      <a href="projects/mars-rover.html" class="prow__media">
+        <span class="prow__imgwrap"><img src="img/rover-deployment.jpg" alt="Mars rover chassis assembly" loading="lazy" /></span>
+        <span class="prow__fig">Fig. 01 — Rover</span>
+      </a>
+      <div class="prow__info">
+        <div class="prow__index">01</div>
+        <p class="prow__role">Lead Engineer · Yale Undergraduate Robotics</p>
+        <h3 class="prow__title"><a href="projects/mars-rover.html">Mars Rover Life-Detection System</a></h3>
+        <p class="prow__body">
           Leading mechanism design and structural integration of a deployable
           life-detection rover. Designed a 4-DoF robotic arm with a custom
           forward/inverse kinematic simulator for path planning, and validated a
           50N linear actuator deployment mechanism to a 2.0× safety factor via FEA.
         </p>
-        <div class="project__tech">
+        <div class="prow__tech">
           <span>SolidWorks</span><span>COMSOL</span><span>FEA</span><span>Python</span>
         </div>
-        <a href="projects/mars-rover.html" class="project__link">View project →</a>
-      </article>
+        <a href="projects/mars-rover.html" class="prow__link">View project + live arm simulator</a>
+      </div>
+    </article>
 
-      <article class="project">
-        <a href="projects/prosthetics.html" class="project__thumb">
-          <img src="img/prosthetic-glove.jpg" alt="Pediatric prosthetic limb prototype" loading="lazy" />
-        </a>
-        <div class="project__index">P-02</div>
-        <h3 class="project__title">Pediatric Prosthetic Limb</h3>
-        <p class="project__role">Team Lead · Yale AID</p>
-        <p class="project__body">
+    <article class="prow">
+      <a href="projects/prosthetics.html" class="prow__media">
+        <span class="prow__imgwrap"><img src="img/prosthetic-glove.jpg" alt="Pediatric prosthetic limb prototype" loading="lazy" /></span>
+        <span class="prow__fig">Fig. 02 — Prosthetics</span>
+      </a>
+      <div class="prow__info">
+        <div class="prow__index">02</div>
+        <p class="prow__role">Team Lead · Yale AID</p>
+        <h3 class="prow__title"><a href="projects/prosthetics.html">Pediatric Prosthetic Limb</a></h3>
+        <p class="prow__body">
           Led a 7-member multidisciplinary team to deliver a custom passive
           prosthetic limb to a pediatric patient. Secured $5,000+ in project
           funding, performed root-cause analysis on pneumatic actuator failures,
           and iterated 3D-printed silicone mold designs for reliability.
         </p>
-        <div class="project__tech">
+        <div class="prow__tech">
           <span>SolidWorks FEA</span><span>DFA</span><span>3D Printing</span>
         </div>
-        <a href="projects/prosthetics.html" class="project__link">View project →</a>
-      </article>
+        <a href="projects/prosthetics.html" class="prow__link">View project</a>
+      </div>
+    </article>
 
-      <article class="project">
-        <a href="projects/research.html" class="project__thumb">
-          <img src="img/flow-CFD.jpg" alt="CFD simulation of flow around a cylinder" loading="lazy" />
-        </a>
-        <div class="project__index">P-03</div>
-        <h3 class="project__title">CFD-Trained PINN Pipeline</h3>
-        <p class="project__role">Research · Humphrey Lab</p>
-        <p class="project__body">
+    <article class="prow">
+      <a href="projects/research.html" class="prow__media">
+        <span class="prow__imgwrap"><img src="img/flow-CFD.jpg" alt="CFD simulation of flow around a cylinder" loading="lazy" /></span>
+        <span class="prow__fig">Fig. 03 — CFD</span>
+      </a>
+      <div class="prow__info">
+        <div class="prow__index">03</div>
+        <p class="prow__role">Research · Humphrey Lab</p>
+        <h3 class="prow__title"><a href="projects/research.html">CFD-Trained PINN Pipeline</a></h3>
+        <p class="prow__body">
           Developed Python CFD simulations of flow around a cylinder, generating
           ground-truth datasets used to train physics-informed neural networks.
           Accelerated training via CUDA-based GPU kernels on NVIDIA L4 / A100,
           enabling rapid iteration over large simulation datasets.
         </p>
-        <div class="project__tech">
+        <div class="prow__tech">
           <span>CFD</span><span>JAX</span><span>CUDA</span><span>NumPy</span>
         </div>
-        <a href="projects/research.html" class="project__link">View project →</a>
-      </article>
+        <a href="projects/research.html" class="prow__link">View project</a>
+      </div>
+    </article>
 
-      <article class="project">
-        <a href="projects/spectrometer.html" class="project__thumb">
-          <img src="img/spectrometer.jpg" alt="Custom spectrometer build" loading="lazy" />
-        </a>
-        <div class="project__index">P-04</div>
-        <h3 class="project__title">Custom Spectrometer</h3>
-        <p class="project__role">Yale Robotics · Science Sub-team</p>
-        <p class="project__body">
+    <article class="prow">
+      <a href="projects/spectrometer.html" class="prow__media">
+        <span class="prow__imgwrap"><img src="img/spectrometer.jpg" alt="Custom spectrometer build" loading="lazy" /></span>
+        <span class="prow__fig">Fig. 04 — Optics</span>
+      </a>
+      <div class="prow__info">
+        <div class="prow__index">04</div>
+        <p class="prow__role">Yale Robotics · Science Sub-team</p>
+        <h3 class="prow__title"><a href="projects/spectrometer.html">Custom Spectrometer</a></h3>
+        <p class="prow__body">
           Designed and built a custom spectrometer from scratch using Fourier
           decomposition of light wave data and image analysis. Integrated with
           embedded sensor systems and custom sheet-metal extrusions.
         </p>
-        <div class="project__tech">
+        <div class="prow__tech">
           <span>Image Analysis</span><span>Fourier Methods</span><span>Sheet Metal</span>
         </div>
-        <a href="projects/spectrometer.html" class="project__link">View project →</a>
-      </article>
+        <a href="projects/spectrometer.html" class="prow__link">View project</a>
+      </div>
+    </article>
 
-      <article class="project">
-        <a href="projects/ornl.html" class="project__thumb">
-          <img src="img/ornl-lab.jpg" alt="Oak Ridge National Lab research" loading="lazy" />
-        </a>
-        <div class="project__index">P-05</div>
-        <h3 class="project__title">Nuclear Material Handling Tooling</h3>
-        <p class="project__role">Oak Ridge National Lab · R&amp;D Intern</p>
-        <p class="project__body">
+    <article class="prow">
+      <a href="projects/ornl.html" class="prow__media">
+        <span class="prow__imgwrap"><img src="img/ornl-lab.jpg" alt="Oak Ridge National Lab research" loading="lazy" /></span>
+        <span class="prow__fig">Fig. 05 — ORNL</span>
+      </a>
+      <div class="prow__info">
+        <div class="prow__index">05</div>
+        <p class="prow__role">R&amp;D Intern · Oak Ridge National Lab</p>
+        <h3 class="prow__title"><a href="projects/ornl.html">Nuclear Material Handling Tooling</a></h3>
+        <p class="prow__body">
           Designed and fabricated 3D-printed tooling for graphite handling using
           Design for Manufacturing principles, reducing process cycle time by
-          <strong>66%</strong> (12+ hr → 4 hr). Performed structural
-          characterization on 100+ aluminum alloy samples.
+          66% (12+ hr → 4 hr). Performed structural characterization on 100+
+          aluminum alloy samples.
         </p>
-        <div class="project__tech">
+        <div class="prow__tech">
           <span>DFM</span><span>3D Printing</span><span>Materials Testing</span>
         </div>
-        <a href="projects/ornl.html" class="project__link">View project →</a>
-      </article>
+        <a href="projects/ornl.html" class="prow__link">View project</a>
+      </div>
+    </article>
 
-      <article class="project">
-        <a href="projects/research.html" class="project__thumb">
-          <img src="img/pinn-results.jpg" alt="PINN material prediction results" loading="lazy" />
-        </a>
-        <div class="project__index">P-06</div>
-        <h3 class="project__title">Constitutive Equation Discovery</h3>
-        <p class="project__role">Research · Humphrey Lab</p>
-        <p class="project__body">
+    <article class="prow">
+      <a href="projects/research.html" class="prow__media">
+        <span class="prow__imgwrap"><img src="img/pinn-results.jpg" alt="PINN material prediction results" loading="lazy" /></span>
+        <span class="prow__fig">Fig. 06 — PINNs</span>
+      </a>
+      <div class="prow__info">
+        <div class="prow__index">06</div>
+        <p class="prow__role">Research · Humphrey Lab</p>
+        <h3 class="prow__title"><a href="projects/research.html">Constitutive Equation Discovery</a></h3>
+        <p class="prow__body">
           Architected a deep learning model in JAX/PyTorch to automate constitutive
           equation discovery for elastomers. Achieved ±90% prediction accuracy on
           Neo-Hookean non-linear elasticity vs. COMSOL finite element solutions.
         </p>
-        <div class="project__tech">
+        <div class="prow__tech">
           <span>PyTorch</span><span>JAX</span><span>Auto-diff</span>
         </div>
-        <a href="projects/research.html" class="project__link">View project →</a>
-      </article>
-    </div>
+        <a href="projects/research.html" class="prow__link">View project</a>
+      </div>
+    </article>
   </section>
 
   <!-- GALLERY -->
   <section class="section section--gallery" id="gallery">
     <div class="section__head">
-      <span class="section__num">04</span>
+      <span class="section__num">SEC. 04</span>
       <h2 class="section__title">Gallery</h2>
       <span class="section__rule"></span>
     </div>
 
-    <p class="gallery__hint">// physical builds, prototypes, lab work — keep scrolling</p>
+    <p class="gallery__hint">Physical builds, prototypes, lab work — keep scrolling</p>
   </section>
 
-  <!-- Apple-style horizontal-scroll-on-vertical-scroll carousel -->
+  <!-- Horizontal-scroll-on-vertical-scroll carousel -->
   <section class="hscroll" aria-label="Project gallery carousel">
     <div class="hscroll__sticky">
       <div class="hscroll__track" id="hscrollTrack">
         <figure class="hscroll__slide">
           <img src="img/rover-deployment.jpg" alt="Rover chassis assembly" loading="lazy" />
-          <figcaption><span class="cap__num">01</span>Rover chassis assembly · 2025</figcaption>
+          <figcaption><span class="cap__num">Fig. 01</span>Rover chassis assembly · 2025</figcaption>
         </figure>
         <figure class="hscroll__slide">
           <img src="img/actuator-test.jpg" alt="4-DOF rover arm test" loading="lazy" />
-          <figcaption><span class="cap__num">02</span>4-DOF rover arm validation</figcaption>
+          <figcaption><span class="cap__num">Fig. 02</span>4-DoF rover arm validation</figcaption>
         </figure>
         <figure class="hscroll__slide">
           <img src="img/spectrometer.jpg" alt="Custom spectrometer build" loading="lazy" />
-          <figcaption><span class="cap__num">03</span>Custom spectrometer build</figcaption>
+          <figcaption><span class="cap__num">Fig. 03</span>Custom spectrometer build</figcaption>
         </figure>
         <figure class="hscroll__slide">
           <img src="img/ornl-lab.jpg" alt="Oak Ridge research poster" loading="lazy" />
-          <figcaption><span class="cap__num">04</span>ORNL — ML alloy optimization</figcaption>
+          <figcaption><span class="cap__num">Fig. 04</span>ORNL — ML alloy optimization</figcaption>
         </figure>
         <figure class="hscroll__slide">
           <img src="img/prosthetic-glove.jpg" alt="Pediatric prosthetic limb" loading="lazy" />
-          <figcaption><span class="cap__num">05</span>Pediatric prosthetic limb</figcaption>
+          <figcaption><span class="cap__num">Fig. 05</span>Pediatric prosthetic limb</figcaption>
         </figure>
         <figure class="hscroll__slide">
           <img src="img/pinn-results.jpg" alt="ML material prediction" loading="lazy" />
-          <figcaption><span class="cap__num">06</span>ML material prediction</figcaption>
+          <figcaption><span class="cap__num">Fig. 06</span>ML material prediction</figcaption>
         </figure>
         <figure class="hscroll__slide">
-          <img src="img/flow-CFD.jpg" alt="simulating flow around a cylinder" loading="lazy" />
-          <figcaption><span class="cap__num">07</span>simulating flow around a cylinder</figcaption>
+          <img src="img/flow-CFD.jpg" alt="Simulating flow around a cylinder" loading="lazy" />
+          <figcaption><span class="cap__num">Fig. 07</span>Simulating flow around a cylinder</figcaption>
         </figure>
       </div>
 
@@ -411,7 +450,7 @@
   <!-- RESUME -->
   <section class="section" id="resume">
     <div class="section__head">
-      <span class="section__num">05</span>
+      <span class="section__num">SEC. 05</span>
       <h2 class="section__title">Résumé</h2>
       <span class="section__rule"></span>
     </div>
@@ -422,9 +461,8 @@
 
     <div class="resume__grid">
       <a class="resume__card" href="resume/Murat_Khidoyatov_s_Mechanical_Engineering_Resume.pdf" download>
-        <div class="resume__icon">→</div>
+        <span class="resume__tag">Doc. R-01 — Hardware <span class="resume__icon">↘</span></span>
         <div class="resume__body">
-          <span class="resume__tag">RESUME · 01</span>
           <h3>Mechanical Engineering</h3>
           <p>Hardware-focused: CAD, FEA, mechanism design, fabrication, aerospace structures.</p>
           <span class="resume__cta">Download PDF</span>
@@ -432,27 +470,47 @@
       </a>
 
       <a class="resume__card" href="resume/Murat_Khidoyatov_ML_Resume.pdf" download>
-        <div class="resume__icon">→</div>
+        <span class="resume__tag">Doc. R-02 — Computational <span class="resume__icon">↘</span></span>
         <div class="resume__body">
-          <span class="resume__tag">RESUME · 02</span>
-          <h3>Machine Learning and Computational Simulations</h3>
-          <p>Focus: ML, Scientific Computing, CFD, PINNs, GPU acceleration.</p>
+          <h3>Machine Learning &amp; Scientific Computing</h3>
+          <p>Focus: ML, scientific computing, CFD, PINNs, GPU acceleration.</p>
           <span class="resume__cta">Download PDF</span>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- FOOTER — drawing title block -->
   <footer class="footer">
-    <div class="footer__row">
-      <span class="footer__sig">// designed &amp; built by Murat Khidoyatov</span>
-      <span class="footer__year">© 2026</span>
+    <div class="tblock">
+      <div class="tblock__cell tblock__cell--wide">
+        <span class="tblock__title">Murat Khidoyatov — Portfolio</span>
+        <span class="tblock__sub">Designed &amp; built by hand · no template</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Drawn by</span>
+        <span class="tblock__v">M.K.</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Date</span>
+        <span class="tblock__v">2026.07</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Scale</span>
+        <span class="tblock__v">NTS</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Sheet</span>
+        <span class="tblock__v">1 / 1</span>
+      </div>
     </div>
-    <div class="footer__links">
-      <a href="mailto:murat.khidoyatov@yale.edu">email</a>
-      <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">linkedin</a>
-      <a href="https://github.com/muratkhid" target="_blank" rel="noopener">github</a>
+    <div class="footer__row">
+      <span class="footer__sig">© 2026 Murat Khidoyatov</span>
+      <div class="footer__links">
+        <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+        <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
+      </div>
     </div>
   </footer>
 

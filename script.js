@@ -1,24 +1,31 @@
-/* Theme toggle with localStorage persistence */
+/* Theme toggle — paper ↔ blueprint, persisted in localStorage */
 (function() {
   const root = document.documentElement;
   const toggle = document.getElementById('themeToggle');
-  const ICON = { dark: '◐', light: '◑' };
 
-  // initialize from saved preference or system
-  const saved = localStorage.getItem('theme');
-  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-  const initial = saved || (prefersLight ? 'light' : 'dark');
-  applyTheme(initial);
+  // migrate old saved values ('dark'/'light') to new theme names
+  const saved = (function() {
+    const s = localStorage.getItem('theme');
+    if (s === 'dark') return 'blueprint';
+    if (s === 'light') return 'paper';
+    return s;
+  })();
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved || (prefersDark ? 'blueprint' : 'paper'));
 
-  toggle.addEventListener('click', () => {
-    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
-    applyTheme(next);
-    localStorage.setItem('theme', next);
-  });
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const next = root.dataset.theme === 'blueprint' ? 'paper' : 'blueprint';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+  }
 
   function applyTheme(t) {
     root.dataset.theme = t;
-    toggle.querySelector('.theme-icon').textContent = ICON[t] || ICON.dark;
+    // button shows the theme you'd switch TO
+    if (toggle) toggle.textContent = t === 'blueprint' ? 'paper' : 'blueprint';
+    window.dispatchEvent(new CustomEvent('themechange', { detail: t }));
   }
 })();
 
@@ -56,48 +63,193 @@
   update();
 })();
 
-/* Hero terminal: type commands line by line */
+/* ── Hero: potential flow around a cylinder — the cylinder is the cursor ───
+   Classical inviscid solution: uniform stream + doublet. Particles are
+   advected through the velocity field and leave ink trails on the sheet.  */
 (function() {
-  const body = document.querySelector('.terminal__body');
-  if (!body) return;
+  const canvas = document.getElementById('flowCanvas');
+  if (!canvas) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) return;
 
-  const lines = Array.from(body.querySelectorAll('.line'));
-  const steps = [];
-  lines.forEach(line => {
-    const cmd = line.querySelector('.cmd');
-    if (cmd) {
-      steps.push({ line, type: 'cmd', el: cmd, text: cmd.textContent });
-      cmd.textContent = '';
-    } else if (line.classList.contains('line--out')) {
-      steps.push({ line, type: 'out' });
-    } else {
-      steps.push({ line, type: 'show' });
+  const ctx = canvas.getContext('2d');
+  const hero = canvas.parentElement;
+
+  let W = 0, H = 0, DPR = 1;
+  let particles = [];
+  let running = true;
+  let visible = true;
+
+  // cylinder (cursor) state — eased toward pointer target
+  let cx = 0, cy = 0;         // current
+  let tx = 0, ty = 0;         // target
+  let R = 60;                 // cylinder radius
+  let hasPointer = false;
+  let driftT = Math.random() * 100;
+
+  // theme colors, refreshed on theme change
+  let inkRGB = '22, 24, 29';
+  let accentRGB = '29, 67, 204';
+  let bgColor = '#eef0f2';
+
+  function readTheme() {
+    const s = getComputedStyle(document.documentElement);
+    inkRGB    = s.getPropertyValue('--line-rgb').trim()   || inkRGB;
+    accentRGB = s.getPropertyValue('--accent-rgb').trim() || accentRGB;
+    bgColor   = s.getPropertyValue('--bg').trim()         || bgColor;
+  }
+
+  function resize() {
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    W = hero.clientWidth;
+    H = hero.clientHeight;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    R = Math.max(42, Math.min(W, H) * 0.085);
+    if (!hasPointer) { cx = tx = W * 0.62; cy = ty = H * 0.42; }
+    seed();
+    ctx.clearRect(0, 0, W, H);
+  }
+
+  function seed() {
+    const n = Math.max(220, Math.min(650, Math.round((W * H) / 3200)));
+    particles = [];
+    for (let i = 0; i < n; i++) particles.push(spawn(true));
+  }
+
+  function spawn(anywhere) {
+    return {
+      x: anywhere ? Math.random() * W : -10 - Math.random() * 40,
+      y: Math.random() * H,
+      px: 0, py: 0,
+      life: 120 + Math.random() * 260
+    };
+  }
+
+  /* velocity of uniform flow (left→right) past a cylinder at (cx, cy) */
+  const U = 42; // free-stream speed, px/s-ish
+  function vel(x, y) {
+    const dx = x - cx, dy = y - cy;
+    const r2 = dx * dx + dy * dy;
+    if (r2 < 1) return [0, 0];
+    const R2 = R * R;
+    const f = R2 / (r2 * r2);
+    return [
+      U * (1 - f * (dx * dx - dy * dy)),
+      U * (-f * 2 * dx * dy)
+    ];
+  }
+
+  let last = performance.now();
+  function frame(now) {
+    if (!running) return;
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    if (!visible || document.hidden) { requestAnimationFrame(frame); return; }
+
+    // drift the cylinder gently when the pointer hasn't arrived (touch devices)
+    if (!hasPointer) {
+      driftT += dt * 0.35;
+      tx = W * (0.5 + 0.22 * Math.sin(driftT));
+      ty = H * (0.45 + 0.16 * Math.sin(driftT * 1.7 + 1.3));
     }
-    line.style.visibility = 'hidden';
+    cx += (tx - cx) * 0.07;
+    cy += (ty - cy) * 0.07;
+
+    // fade previous frame → ink trails
+    ctx.globalAlpha = 0.09;
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+
+    // advect + draw particles
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = `rgba(${inkRGB}, 0.34)`;
+    ctx.beginPath();
+    for (const p of particles) {
+      p.px = p.x; p.py = p.y;
+      const [u, v] = vel(p.x, p.y);
+      p.x += u * dt * 2.2;
+      p.y += v * dt * 2.2;
+      p.life -= 1;
+
+      const ddx = p.x - cx, ddy = p.y - cy;
+      const inside = (ddx * ddx + ddy * ddy) < R * R * 1.02;
+
+      if (p.x > W + 20 || p.y < -20 || p.y > H + 20 || p.life <= 0 || inside) {
+        Object.assign(p, spawn(false));
+        continue;
+      }
+      ctx.moveTo(p.px, p.py);
+      ctx.lineTo(p.x, p.y);
+    }
+    ctx.stroke();
+
+    // the cylinder — dashed circle + crosshair, drawn crisp each frame
+    ctx.save();
+    ctx.strokeStyle = `rgba(${accentRGB}, 0.85)`;
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const ch = 7;
+    ctx.beginPath();
+    ctx.moveTo(cx - ch, cy); ctx.lineTo(cx + ch, cy);
+    ctx.moveTo(cx, cy - ch); ctx.lineTo(cx, cy + ch);
+    ctx.stroke();
+    // radius annotation
+    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.fillStyle = `rgba(${accentRGB}, 0.9)`;
+    ctx.fillText('R = ' + Math.round(R) + ' mm', cx + R * 0.74, cy - R * 0.74);
+    ctx.restore();
+
+    requestAnimationFrame(frame);
+  }
+
+  // pointer tracking (mouse anywhere over the page maps into hero coords)
+  window.addEventListener('mousemove', e => {
+    const rect = hero.getBoundingClientRect();
+    if (e.clientY >= rect.top - 200 && e.clientY <= rect.bottom + 200) {
+      hasPointer = true;
+      tx = e.clientX - rect.left;
+      ty = e.clientY - rect.top;
+    }
+  }, { passive: true });
+
+  hero.addEventListener('touchmove', e => {
+    const rect = hero.getBoundingClientRect();
+    const t = e.touches[0];
+    if (!t) return;
+    hasPointer = true;
+    tx = t.clientX - rect.left;
+    ty = t.clientY - rect.top;
+    // release the "pointer" again after touch ends so drift resumes
+    clearTimeout(hero._flowTO);
+    hero._flowTO = setTimeout(() => { hasPointer = false; }, 2500);
+  }, { passive: true });
+
+  // pause when hero is offscreen
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting;
+    }, { threshold: 0.02 }).observe(hero);
+  }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('themechange', () => {
+    readTheme();
+    ctx.clearRect(0, 0, W, H);
   });
 
-  let i = 0;
-  function next() {
-    if (i >= steps.length) return;
-    const s = steps[i++];
-    s.line.style.visibility = 'visible';
-    if (s.type === 'cmd') {
-      let c = 0;
-      (function typeChar() {
-        if (c < s.text.length) {
-          s.el.textContent += s.text[c++];
-          setTimeout(typeChar, 28 + Math.random() * 40);
-        } else {
-          setTimeout(next, 180);
-        }
-      })();
-    } else {
-      setTimeout(next, s.type === 'out' ? 220 : 120);
-    }
-  }
-  setTimeout(next, 400);
+  readTheme();
+  resize();
+  requestAnimationFrame(t => { last = t; frame(t); });
 })();
 
 /* Animated stat counters */
@@ -127,26 +279,18 @@
   nums.forEach(el => obs.observe(el));
 })();
 
-/* Cursor-following spotlight on project cards */
-(function() {
-  if (window.matchMedia('(hover: none)').matches) return;
-  document.querySelectorAll('.project').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-    });
-  });
-})();
-
-/* Subtle reveal-on-scroll for sections */
+/* Reveal-on-scroll for section content */
 (function() {
   if (!('IntersectionObserver' in window)) return;
-  const items = document.querySelectorAll('.research__item, .project, .resume__card, .stat');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  const items = document.querySelectorAll(
+    '.research__item, .prow, .resume__card, .stat, .publication, .about__figure, .about__card, .tblock'
+  );
   items.forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(16px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
   });
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -156,11 +300,11 @@
         obs.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.1 });
   items.forEach(el => obs.observe(el));
 })();
 
-/* Apple-style horizontal-scroll-on-vertical-scroll gallery
+/* Horizontal-scroll-on-vertical-scroll gallery
    Maps vertical scroll progress through the .hscroll section onto a
    horizontal translation of the .hscroll__track */
 (function() {
@@ -176,15 +320,12 @@
   let ticking = false;
 
   function getCurrentX() {
-    // read the current translateX from inline style, if any
     const t = track.style.transform || '';
     const m = t.match(/translate3d\(\s*(-?\d+(?:\.\d+)?)/);
     return m ? -parseFloat(m[1]) : 0;
   }
 
   function measure() {
-    // we want the LAST slide's right edge to align with the viewport's right
-    // edge when scroll progress = 1. Measure from the actual rendered DOM.
     const lastSlide = track.lastElementChild;
     if (!lastSlide) { maxX = 0; return; }
     const trackRect = track.getBoundingClientRect();
@@ -223,14 +364,12 @@
   window.addEventListener('resize', refresh);
   window.addEventListener('load', refresh);
 
-  // re-measure when each image actually loads (their widths affect the track)
   track.querySelectorAll('img').forEach(img => {
     if (img.complete) return;
     img.addEventListener('load',  refresh);
     img.addEventListener('error', refresh);
   });
 
-  // safety re-measures for late-arriving fonts / layout settling
   setTimeout(refresh, 300);
   setTimeout(refresh, 1000);
 
