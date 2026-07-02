@@ -16,21 +16,31 @@
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
-  <header class="nav">
-    <a href="../" class="nav__brand">Murat Khidoyatov</a>
-    <nav class="nav__links">
-      <a href="../#about">About</a>
-      <a href="../#research">Research</a>
-      <a href="../#projects">Projects</a>
-      <a href="../#gallery">Gallery</a>
-      <a href="../#resume">Résumé</a>
+  <!-- Left navigation rail (desktop) -->
+  <aside class="rail">
+    <a href="../" class="rail__brand">Murat<br />Khidoyatov<span>.</span></a>
+    <nav class="rail__nav" aria-label="Sections">
+      <a class="rail__link" href="../#about"><i>01</i>About</a>
+      <a class="rail__link" href="../#research"><i>02</i>Research</a>
+      <a class="rail__link" href="../#projects"><i>03</i>Projects</a>
+      <a class="rail__link" href="../#gallery"><i>04</i>Gallery</a>
+      <a class="rail__link" href="../#resume"><i>05</i>Résumé</a>
     </nav>
-    <div class="nav__actions">
-      <button class="nav__theme" id="themeToggle" aria-label="Switch color theme">blueprint</button>
-      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+    <div class="rail__foot">
+      <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+      <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
     </div>
+    <p class="rail__note">New Haven, CT<br />Yale ME '27</p>
+    <span class="rail__progress" id="railProgress" aria-hidden="true"></span>
+  </aside>
+
+  <!-- Slim top bar (mobile) -->
+  <header class="mbar">
+    <a href="../" class="mbar__brand">Murat Khidoyatov<span>.</span></a>
+    <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </header>
 
   <!-- Mobile menu -->

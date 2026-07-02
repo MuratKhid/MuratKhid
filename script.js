@@ -1,34 +1,3 @@
-/* Theme toggle — paper ↔ blueprint, persisted in localStorage */
-(function() {
-  const root = document.documentElement;
-  const toggle = document.getElementById('themeToggle');
-
-  // migrate old saved values ('dark'/'light') to new theme names
-  const saved = (function() {
-    const s = localStorage.getItem('theme');
-    if (s === 'dark') return 'blueprint';
-    if (s === 'light') return 'paper';
-    return s;
-  })();
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(saved || (prefersDark ? 'blueprint' : 'paper'));
-
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      const next = root.dataset.theme === 'blueprint' ? 'paper' : 'blueprint';
-      applyTheme(next);
-      localStorage.setItem('theme', next);
-    });
-  }
-
-  function applyTheme(t) {
-    root.dataset.theme = t;
-    // button shows the theme you'd switch TO
-    if (toggle) toggle.textContent = t === 'blueprint' ? 'paper' : 'blueprint';
-    window.dispatchEvent(new CustomEvent('themechange', { detail: t }));
-  }
-})();
-
 /* Mobile menu toggle */
 (function() {
   const burger = document.getElementById('navBurger');
@@ -46,21 +15,48 @@
   menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
 })();
 
-/* Top scroll progress bar */
+/* Rail: vertical scroll progress along the rail's right edge */
 (function() {
-  const fill = document.getElementById('scrollProgress');
+  const fill = document.getElementById('railProgress');
   if (!fill) return;
   let ticking = false;
   function update() {
     const total = document.documentElement.scrollHeight - window.innerHeight;
     const p = total > 0 ? Math.min(1, window.scrollY / total) : 0;
-    fill.style.width = (p * 100) + '%';
+    fill.style.height = (p * 100) + '%';
     ticking = false;
   }
   window.addEventListener('scroll', () => {
     if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
   }, { passive: true });
+  window.addEventListener('resize', update);
   update();
+})();
+
+/* Rail: highlight the section currently in view */
+(function() {
+  const links = document.querySelectorAll('.rail__link[href^="#"]');
+  if (!links.length || !('IntersectionObserver' in window)) return;
+
+  const byId = {};
+  links.forEach(a => { byId[a.getAttribute('href').slice(1)] = a; });
+  const sections = Object.keys(byId)
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  if (!sections.length) return;
+
+  function setActive(id) {
+    links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    // pick the visible section nearest the top of the viewport
+    const visible = entries.filter(e => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (visible.length) setActive(visible[0].target.id);
+  }, { rootMargin: '-20% 0px -55% 0px' });
+
+  sections.forEach(s => obs.observe(s));
 })();
 
 /* ── Hero: potential flow around a cylinder — the cylinder is the cursor ───
@@ -242,10 +238,6 @@
   }
 
   window.addEventListener('resize', resize);
-  window.addEventListener('themechange', () => {
-    readTheme();
-    ctx.clearRect(0, 0, W, H);
-  });
 
   readTheme();
   resize();

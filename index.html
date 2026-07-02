@@ -31,25 +31,31 @@
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
-  <!-- Scroll progress -->
-  <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__fill" id="scrollProgress"></div></div>
-
-  <!-- Top nav -->
-  <header class="nav">
-    <a href="#" class="nav__brand">Murat Khidoyatov</a>
-    <nav class="nav__links">
-      <a href="#about">About</a>
-      <a href="#research">Research</a>
-      <a href="#projects">Projects</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#resume">Résumé</a>
+  <!-- Left navigation rail (desktop) -->
+  <aside class="rail">
+    <a href="#" class="rail__brand">Murat<br />Khidoyatov<span>.</span></a>
+    <nav class="rail__nav" id="railNav" aria-label="Sections">
+      <a class="rail__link" href="#about"><i>01</i>About</a>
+      <a class="rail__link" href="#research"><i>02</i>Research</a>
+      <a class="rail__link" href="#projects"><i>03</i>Projects</a>
+      <a class="rail__link" href="#gallery"><i>04</i>Gallery</a>
+      <a class="rail__link" href="#resume"><i>05</i>Résumé</a>
     </nav>
-    <div class="nav__actions">
-      <button class="nav__theme" id="themeToggle" aria-label="Switch color theme">blueprint</button>
-      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+    <div class="rail__foot">
+      <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+      <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
     </div>
+    <p class="rail__note">New Haven, CT<br />Yale ME '27</p>
+    <span class="rail__progress" id="railProgress" aria-hidden="true"></span>
+  </aside>
+
+  <!-- Slim top bar (mobile) -->
+  <header class="mbar">
+    <a href="#" class="mbar__brand">Murat Khidoyatov<span>.</span></a>
+    <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </header>
 
   <!-- Mobile menu -->
@@ -138,9 +144,8 @@
   <!-- ABOUT -->
   <section class="section" id="about">
     <div class="section__head">
-      <span class="section__num">SEC. 01</span>
+      <span class="section__index" aria-hidden="true">01</span>
       <h2 class="section__title">About</h2>
-      <span class="section__rule"></span>
     </div>
 
     <div class="about__grid">
@@ -197,9 +202,8 @@
   <!-- RESEARCH & PUBLICATIONS -->
   <section class="section" id="research">
     <div class="section__head">
-      <span class="section__num">SEC. 02</span>
+      <span class="section__index" aria-hidden="true">02</span>
       <h2 class="section__title">Research</h2>
-      <span class="section__rule"></span>
     </div>
 
     <div class="research__list">
@@ -260,9 +264,8 @@
   <!-- PROJECTS -->
   <section class="section" id="projects">
     <div class="section__head">
-      <span class="section__num">SEC. 03</span>
+      <span class="section__index" aria-hidden="true">03</span>
       <h2 class="section__title">Projects</h2>
-      <span class="section__rule"></span>
     </div>
 
     <article class="prow">
@@ -399,9 +402,8 @@
   <!-- GALLERY -->
   <section class="section section--gallery" id="gallery">
     <div class="section__head">
-      <span class="section__num">SEC. 04</span>
+      <span class="section__index" aria-hidden="true">04</span>
       <h2 class="section__title">Gallery</h2>
-      <span class="section__rule"></span>
     </div>
 
     <p class="gallery__hint">Physical builds, prototypes, lab work — keep scrolling</p>
@@ -450,9 +452,8 @@
   <!-- RESUME -->
   <section class="section" id="resume">
     <div class="section__head">
-      <span class="section__num">SEC. 05</span>
+      <span class="section__index" aria-hidden="true">05</span>
       <h2 class="section__title">Résumé</h2>
-      <span class="section__rule"></span>
     </div>
 
     <p class="resume__intro">
