@@ -29,6 +29,11 @@
   <meta name="twitter:image" content="https://muratkhid.github.io/MuratKhid/img/headshot.jpg" />
 
   <style>
+    .cw-heading {
+      font-size: 16px;
+      margin-bottom: 1.1em;
+    }
+
     .cw-note {
       max-width: 62ch;
       color: var(--text-dim);
@@ -78,7 +83,7 @@
     .cw-row__code {
       font-family: var(--font-mono);
       font-size: 11px;
-      color: var(--text-muted);
+      color: var(--accent);
       letter-spacing: 0.04em;
       white-space: nowrap;
     }
@@ -91,7 +96,7 @@
     .cw-row__cr {
       font-family: var(--font-mono);
       font-size: 11px;
-      color: var(--text-dim);
+      color: var(--text);
     }
 
     @media (max-width: 560px) {
@@ -109,10 +114,11 @@
     <a href="./" class="rail__brand">Murat<br />Khidoyatov<span>.</span></a>
     <nav class="rail__nav" aria-label="Sections">
       <a class="rail__link" href="./#about"><i>01</i>About</a>
-      <a class="rail__link" href="./#research"><i>02</i>Research</a>
-      <a class="rail__link" href="./#projects"><i>03</i>Projects</a>
-      <a class="rail__link" href="./#gallery"><i>04</i>Gallery</a>
-      <a class="rail__link" href="./#resume"><i>05</i>Résumé</a>
+      <a class="rail__link" href="coursework.html"><i>02</i>Coursework</a>
+      <a class="rail__link" href="./#research"><i>03</i>Research</a>
+      <a class="rail__link" href="./#projects"><i>04</i>Projects</a>
+      <a class="rail__link" href="./#gallery"><i>05</i>Gallery</a>
+      <a class="rail__link" href="./#resume"><i>06</i>Résumé</a>
     </nav>
     <div class="rail__foot">
       <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
@@ -134,6 +140,7 @@
   <!-- Mobile menu -->
   <nav class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <a href="./#about">About</a>
+    <a href="coursework.html">Coursework</a>
     <a href="./#research">Research</a>
     <a href="./#projects">Projects</a>
     <a href="./#gallery">Gallery</a>
@@ -162,12 +169,11 @@
 
       <main>
         <div class="proj-subsection">
-          <div class="proj-subsection__label">course list</div>
-          <h2 class="proj-subsection__title">Every Class, Term by Term</h2>
+          <h2 class="proj-subsection__label cw-heading">Course List</h2>
           <p class="cw-note">
-            A quick note on the numbers: Yale counts credits per course, not per
-            hour. A regular class is worth 1 credit, most labs are worth 0.5, and
-            language classes are worth 1.5. Grades are left off on purpose.
+            Yale counts credits per course, not per hour. A regular class is
+            worth 1 credit, most labs are worth 0.5, and language classes are
+            worth 1.5. Grades are left off on purpose.
           </p>
 
           <div class="cw-term">
@@ -254,12 +260,13 @@
           <div class="cw-term">
             <div class="cw-term__head">
               <h3 class="cw-term__name">Spring 2026</h3>
-              <span class="cw-term__cr">4 cr</span>
+              <span class="cw-term__cr">5 cr</span>
             </div>
             <div class="cw-row"><span class="cw-row__code">MENG 3020L</span><span class="cw-row__title">Mechatronics Laboratory</span><span class="cw-row__cr">1</span></div>
             <div class="cw-row"><span class="cw-row__code">MENG 3323</span><span class="cw-row__title">Mechanical Engineering III: Dynamics</span><span class="cw-row__cr">1</span></div>
             <div class="cw-row"><span class="cw-row__code">MENG 3423L</span><span class="cw-row__title">Fluid Mechanics and Thermodynamics Laboratory</span><span class="cw-row__cr">1</span></div>
             <div class="cw-row"><span class="cw-row__code">MENG 3424</span><span class="cw-row__title">Mechanical Engineering IV: Fluid and Thermal Energy Sciences</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 4370</span><span class="cw-row__title">Computational Mechanics</span><span class="cw-row__cr">1</span></div>
           </div>
 
           <div class="cw-term">
@@ -295,11 +302,11 @@
           </a>
           <a href="./#research" class="proj-other-link">
             <span>Research</span>
-            <span class="proj-other-link__num">02</span>
+            <span class="proj-other-link__num">03</span>
           </a>
           <a href="./#projects" class="proj-other-link">
             <span>Projects</span>
-            <span class="proj-other-link__num">03</span>
+            <span class="proj-other-link__num">04</span>
           </a>
         </div>
       </aside>
