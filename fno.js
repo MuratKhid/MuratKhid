@@ -283,7 +283,16 @@
         var src = '(' + workerMain.toString() + ')()';
         var url = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
         var w = new Worker(url);
+        URL.revokeObjectURL(url);
         self_._worker = w;
+        w.onerror = function (e) {
+          self_.pending = false;
+          self_.ready = false;
+          self_._worker = null;
+          try { w.terminate(); } catch (_) {}
+          if (onReady) onReady(e || new Error('worker error'));
+        };
+        w.onmessageerror = w.onerror;
         w.onmessage = function (e) {
           var msg = e.data;
           if (msg.type === 'ready') {
