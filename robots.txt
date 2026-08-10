@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://muratkhid.github.io/MuratKhid/sitemap.xml
