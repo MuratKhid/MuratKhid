@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="404 — the requested sheet is not in the drawing set. Return to Sheet 1 / 1 of Murat Khidoyatov's portfolio." />
+  <meta name="robots" content="noindex" />
+  <title>404 — Page Not Found · Murat Khidoyatov</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/MuratKhid/styles.css" />
+  <link rel="icon" type="image/png" href="/MuratKhid/favicon.png" />
+
+  <style>
+    /* ── 404-specific layout (everything else comes from styles.css) ─────── */
+    .err {
+      min-height: calc(100svh - 240px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .err .section__head { animation: rise 0.8s ease 0.05s both; }
+
+    .err__fig {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: -1.2rem 0 2.4rem;
+      animation: rise 0.8s ease 0.18s both;
+    }
+    .err__fig strong { color: var(--accent); font-weight: 500; }
+
+    .err__grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: clamp(2rem, 5vw, 4.5rem);
+      align-items: start;
+      max-width: 920px;
+      animation: rise 0.9s ease 0.3s both;
+    }
+    @media (max-width: 760px) {
+      .err__grid { grid-template-columns: 1fr; }
+    }
+
+    .err__body {
+      color: var(--text-dim);
+      font-size: 15.5px;
+      max-width: 52ch;
+      margin-bottom: 2.2rem;
+    }
+
+    .err__actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.1rem 2.4rem;
+    }
+
+    .err__alt {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--border-strong);
+      padding-bottom: 0.2em;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .err__alt:hover { color: var(--accent); border-color: var(--accent); }
+
+    .err__card { width: 100%; max-width: 360px; }
+
+    /* mobile top bar: burger needs script.js, so use a plain index link instead */
+    .mbar__index {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 0.45em 0.85em;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .mbar__index:hover { color: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <!-- Background layers -->
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Left navigation rail (desktop) -->
+  <aside class="rail">
+    <a href="/MuratKhid/index.html" class="rail__brand">Murat<br />Khidoyatov<span>.</span></a>
+    <nav class="rail__nav" aria-label="Sections">
+      <a class="rail__link" href="/MuratKhid/index.html#about"><i>01</i>About</a>
+      <a class="rail__link" href="/MuratKhid/index.html#research"><i>02</i>Research</a>
+      <a class="rail__link" href="/MuratKhid/index.html#projects"><i>03</i>Projects</a>
+      <a class="rail__link" href="/MuratKhid/index.html#gallery"><i>04</i>Gallery</a>
+      <a class="rail__link" href="/MuratKhid/index.html#resume"><i>05</i>Résumé</a>
+    </nav>
+    <div class="rail__foot">
+      <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+      <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="rail__note">New Haven, CT<br />Yale ME '27</p>
+  </aside>
+
+  <!-- Slim top bar (mobile) -->
+  <header class="mbar">
+    <a href="/MuratKhid/index.html" class="mbar__brand">Murat Khidoyatov<span>.</span></a>
+    <a href="/MuratKhid/index.html" class="mbar__index">Index</a>
+  </header>
+
+  <!-- 404 — failed drawing lookup -->
+  <main class="section err">
+    <div class="section__head">
+      <span class="section__index" aria-hidden="true">404</span>
+      <h1 class="section__title">Sheet not found</h1>
+    </div>
+
+    <p class="err__fig">
+      <strong>Fig. 404</strong> — Requested sheet not found in drawing set
+    </p>
+
+    <div class="err__grid">
+      <div>
+        <p class="err__body">
+          The coordinate you requested lies <span class="hl">outside the meshed
+          domain</span>. The solver checked every sheet in the set — residuals
+          diverged, no converged solution exists at this address. Either the
+          link failed mid-iteration, or this page was never drawn. Applying a
+          <span class="hl">reflective boundary condition</span>: you are being
+          sent back toward the origin.
+        </p>
+
+        <div class="err__actions">
+          <a class="prow__link" href="/MuratKhid/index.html">Return to Sheet 1 / 1</a>
+          <a class="err__alt" href="mailto:murat.khidoyatov@yale.edu?subject=Missing%20sheet%20report%20%28404%29">Report a missing drawing</a>
+        </div>
+      </div>
+
+      <div class="about__card err__card">
+        <div class="about__card-head">Lookup Log</div>
+        <div class="about__card-body">
+          <div class="card__row"><span>status</span><span>404 — Not Found</span></div>
+          <div class="card__row"><span>query</span><span>Out-of-bounds coordinate</span></div>
+          <div class="card__row"><span>residual</span><span>NaN (diverged)</span></div>
+          <div class="card__row"><span>revision</span><span>Never issued</span></div>
+          <div class="card__row"><span>boundary</span><span>Reflective → origin</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER — drawing title block -->
+  <footer class="footer">
+    <div class="tblock">
+      <div class="tblock__cell tblock__cell--wide">
+        <span class="tblock__title">Murat Khidoyatov — Portfolio</span>
+        <span class="tblock__sub">Requested sheet not in the set · rev —</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Drawn by</span>
+        <span class="tblock__v">M.K.</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Date</span>
+        <span class="tblock__v">2026.08</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Scale</span>
+        <span class="tblock__v">NTS</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Sheet</span>
+        <span class="tblock__v">— / 1</span>
+      </div>
+    </div>
+    <div class="footer__row">
+      <span class="footer__sig">© 2026 Murat Khidoyatov</span>
+      <div class="footer__links">
+        <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+        <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
