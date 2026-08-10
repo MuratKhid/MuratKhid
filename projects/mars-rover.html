@@ -3,14 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Mars Rover Life-Detection System — Murat Khidoyatov" />
+  <meta name="description" content="Leading mechanism design for Yale's Mars rover life-detection system: a 4-DoF robotic arm with a live FK/IK simulator and an FEA-validated actuator deployment mechanism." />
   <title>Mars Rover · Murat Khidoyatov</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="icon" type="image/jpeg" href="../img/headshot.jpg" />
+  <link rel="icon" type="image/png" href="../favicon.png" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <link rel="canonical" href="https://muratkhid.github.io/MuratKhid/projects/mars-rover.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Mars Rover Life-Detection System — Murat Khidoyatov" />
+  <meta property="og:description" content="4-DoF robotic arm with a live FK/IK simulator and an FEA-validated actuator deployment mechanism, built for Yale Undergraduate Robotics." />
+  <meta property="og:image" content="https://muratkhid.github.io/MuratKhid/img/rover-deployment.jpg" />
+  <meta property="og:url" content="https://muratkhid.github.io/MuratKhid/projects/mars-rover.html" />
+  <meta property="og:site_name" content="Murat Khidoyatov" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Mars Rover Life-Detection System — Murat Khidoyatov" />
+  <meta name="twitter:description" content="4-DoF robotic arm with a live FK/IK simulator, validated to a 2.0× safety factor via FEA." />
+  <meta name="twitter:image" content="https://muratkhid.github.io/MuratKhid/img/rover-deployment.jpg" />
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
@@ -269,8 +285,10 @@
     function resize() {
       W  = canvas.parentElement.clientWidth;
       H  = Math.round(W * 0.46);
-      canvas.width  = W;
-      canvas.height = H;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width  = Math.round(W * dpr);   /* backing store in device px; CSS keeps display size */
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); /* keep all drawing coords in CSS px */
       CX = W / 2;
       CY = H * 0.58;
       S  = Math.min(W, H) * 0.38;
@@ -472,13 +490,16 @@
       const defs = mode === 'ik' ? IK_SLIDERS : FK_SLIDERS;
 
       defs.forEach(d => {
-        /* current value */
+        /* current value — read live state so sliders always match the arm */
         let val;
         if (mode === 'fk') {
           const i = parseInt(d.id[1]);
           val = Math.round(q[i] * 180 / Math.PI);
+        } else if (d.angle) {
+          val = Math.round(tPitch * 180 / Math.PI);
         } else {
-          val = d.dflt;
+          const cur = { tx: target[0], ty: target[1], tz: target[2] }[d.id];
+          val = Math.round(cur * 100) / 100;
         }
 
         const row = document.createElement('div');
@@ -514,6 +535,21 @@
       modeBtn.addEventListener('click', () => {
         mode = mode === 'ik' ? 'fk' : 'ik';
         trail = [];
+        if (mode === 'ik') {
+          /* seed the target from the current pose so the arm doesn't jump */
+          const ee  = fk(q)[3];
+          const rnd = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.round(v * 100) / 100));
+          target = [rnd(ee[0], -1, 1), rnd(ee[1], -1, 1), rnd(ee[2], 0.05, 1)];
+          tYaw   = Math.atan2(target[1], target[0]);
+          tPitch = Math.max(-75, Math.min(75,
+            Math.round((q[1] + q[2] + q[3]) * 180 / Math.PI))) * Math.PI / 180;
+        } else {
+          /* joint sliders become authoritative — snap q onto their grid */
+          q = q.map((qi, i) => {
+            const d = FK_SLIDERS[i];
+            return Math.max(d.min, Math.min(d.max, Math.round(qi * 180 / Math.PI))) * Math.PI / 180;
+          });
+        }
         modeBtn.textContent = mode === 'ik' ? 'Switch to FK mode →' : 'Switch to IK mode →';
         modeBtn.classList.toggle('active', mode === 'fk');
         hintSpan.textContent = mode === 'ik'
@@ -568,7 +604,18 @@
       drawArm(joints, C);
       drawHUD(C, joints);
 
-      requestAnimationFrame(frame);
+      rafId = requestAnimationFrame(frame);
+    }
+
+    /* ── Run the loop only while the canvas is on screen ─────────────── */
+    let rafId = null, booted = false, inView = true;
+    function start() { if (booted && inView && rafId === null) rafId = requestAnimationFrame(frame); }
+    function stop()  { if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; } }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        inView = entries.some(e => e.isIntersecting);
+        inView ? start() : stop();
+      }).observe(canvas);
     }
 
     /* ── Init ─────────────────────────────────────────────────────────── */
@@ -576,7 +623,7 @@
     ro.observe(canvas.parentElement);
     resize();
     buildSliders();
-    document.fonts.ready.then(() => requestAnimationFrame(frame));
+    document.fonts.ready.then(() => { booted = true; start(); });
   })();
   </script>
 </body>
