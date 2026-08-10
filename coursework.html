@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Courses Murat Khidoyatov has taken at Yale, term by term, with credit values." />
+  <title>Coursework · Murat Khidoyatov</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="canonical" href="https://muratkhid.github.io/MuratKhid/coursework.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Coursework · Murat Khidoyatov" />
+  <meta property="og:description" content="Courses taken at Yale, term by term, with credit values." />
+  <meta property="og:image" content="https://muratkhid.github.io/MuratKhid/img/headshot.jpg" />
+  <meta property="og:url" content="https://muratkhid.github.io/MuratKhid/coursework.html" />
+  <meta property="og:site_name" content="Murat Khidoyatov" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Coursework · Murat Khidoyatov" />
+  <meta name="twitter:description" content="Courses taken at Yale, term by term." />
+  <meta name="twitter:image" content="https://muratkhid.github.io/MuratKhid/img/headshot.jpg" />
+
+  <style>
+    .cw-note {
+      max-width: 62ch;
+      color: var(--text-dim);
+      margin-bottom: 2.6rem;
+    }
+
+    .cw-term { margin-bottom: 2.4rem; }
+
+    .cw-term__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-strong);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .cw-term__name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .cw-term__cr {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .cw-row {
+      display: grid;
+      grid-template-columns: 7.2em 1fr auto;
+      gap: 0.4rem 1.2rem;
+      align-items: baseline;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cw-row:last-child { border-bottom: none; }
+
+    .cw-row__code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .cw-row__title {
+      font-size: 14.5px;
+      color: var(--text);
+    }
+
+    .cw-row__cr {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    @media (max-width: 560px) {
+      .cw-row { grid-template-columns: 1fr auto; }
+      .cw-row__code { grid-column: 1 / -1; padding-top: 0.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Left navigation rail (desktop) -->
+  <aside class="rail">
+    <a href="./" class="rail__brand">Murat<br />Khidoyatov<span>.</span></a>
+    <nav class="rail__nav" aria-label="Sections">
+      <a class="rail__link" href="./#about"><i>01</i>About</a>
+      <a class="rail__link" href="./#research"><i>02</i>Research</a>
+      <a class="rail__link" href="./#projects"><i>03</i>Projects</a>
+      <a class="rail__link" href="./#gallery"><i>04</i>Gallery</a>
+      <a class="rail__link" href="./#resume"><i>05</i>Résumé</a>
+    </nav>
+    <div class="rail__foot">
+      <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+      <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="rail__note">New Haven, CT<br />Yale ME '27</p>
+    <span class="rail__progress" id="railProgress" aria-hidden="true"></span>
+  </aside>
+
+  <!-- Slim top bar (mobile) -->
+  <header class="mbar">
+    <a href="./" class="mbar__brand">Murat Khidoyatov<span>.</span></a>
+    <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Mobile menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="./#about">About</a>
+    <a href="./#research">Research</a>
+    <a href="./#projects">Projects</a>
+    <a href="./#gallery">Gallery</a>
+    <a href="./#resume">Résumé</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="section proj-hero">
+    <a href="./" class="proj-back">← home</a>
+    <div class="proj-hero__label">Doc. C-01 · Yale College · B.S. Mechanical Engineering</div>
+    <h1 class="proj-hero__title">Coursework</h1>
+    <p class="proj-hero__role">Class of 2027 · 32.5 credits earned to date</p>
+    <div class="proj-hero__tags">
+      <span>Mechanical Core</span>
+      <span>Applied Math</span>
+      <span>Physics</span>
+      <span>Chemistry</span>
+      <span>Computing</span>
+      <span>Japanese</span>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <div class="proj-body">
+    <div class="proj-body__grid">
+
+      <main>
+        <div class="proj-subsection">
+          <div class="proj-subsection__label">course list</div>
+          <h2 class="proj-subsection__title">Every Class, Term by Term</h2>
+          <p class="cw-note">
+            A quick note on the numbers: Yale counts credits per course, not per
+            hour. A regular class is worth 1 credit, most labs are worth 0.5, and
+            language classes are worth 1.5. Grades are left off on purpose.
+          </p>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Summer 2023</h3>
+              <span class="cw-term__cr">1.5 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">ENGL S114</span><span class="cw-row__title">Writing Seminars I</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MATH S119</span><span class="cw-row__title">Approximation and Prediction</span><span class="cw-row__cr">0.5</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Fall 2023</h3>
+              <span class="cw-term__cr">4.5 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">CHEM 134L</span><span class="cw-row__title">General Chemistry Laboratory I</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">CHEM 161</span><span class="cw-row__title">General Chemistry I</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">ENAS 151</span><span class="cw-row__title">Multivariable Calculus for Engineers</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">JAPN 110</span><span class="cw-row__title">Elementary Japanese I</span><span class="cw-row__cr">1.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">SCIE 020</span><span class="cw-row__title">Research in Physical Science</span><span class="cw-row__cr">0.5</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Spring 2024</h3>
+              <span class="cw-term__cr">4.5 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">BIOL 101</span><span class="cw-row__title">Biochemistry and Biophysics</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">BIOL 102</span><span class="cw-row__title">Cell Biology</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">CHEM 136L</span><span class="cw-row__title">General Chemistry Laboratory II</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">CHEM 165</span><span class="cw-row__title">General Chemistry II</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">JAPN 120</span><span class="cw-row__title">Elementary Japanese II</span><span class="cw-row__cr">1.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">SCIE 021</span><span class="cw-row__title">Research in Physical Science</span><span class="cw-row__cr">0.5</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Summer 2024 · CET Osaka, Japan</h3>
+              <span class="cw-term__cr">2 cr · transfer</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">JAPN 1999</span><span class="cw-row__title">Intermediate Japanese</span><span class="cw-row__cr">2</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Fall 2024</h3>
+              <span class="cw-term__cr">5.5 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">BENG 280</span><span class="cw-row__title">Sophomore Seminar</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">CHEM 220</span><span class="cw-row__title">Organic Chemistry</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">CHEM 222L</span><span class="cw-row__title">Lab for Organic Chemistry I</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">ENAS 194</span><span class="cw-row__title">Ordinary and Partial Differential Equations</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">PHYS 165L</span><span class="cw-row__title">General Physics Laboratory</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">PHYS 180</span><span class="cw-row__title">University Physics</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">PSYC 141</span><span class="cw-row__title">The Criminal Mind</span><span class="cw-row__cr">1</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Spring 2025</h3>
+              <span class="cw-term__cr">6.5 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">ANTH 492</span><span class="cw-row__title">Imaging Ancient Worlds</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">ENAS 130</span><span class="cw-row__title">Computing for Engineers and Scientists</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MATH 222</span><span class="cw-row__title">Linear Algebra with Applications</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 185</span><span class="cw-row__title">Mechanical Design</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 211</span><span class="cw-row__title">Thermodynamics for Mechanical Engineers</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">PHYS 166L</span><span class="cw-row__title">General Physics Laboratory</span><span class="cw-row__cr">0.5</span></div>
+            <div class="cw-row"><span class="cw-row__code">PHYS 181</span><span class="cw-row__title">University Physics</span><span class="cw-row__cr">1</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Fall 2025</h3>
+              <span class="cw-term__cr">4 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">ECE 2000</span><span class="cw-row__title">Introduction to Electronics</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 2311</span><span class="cw-row__title">Mechanical Engineering I: Strength and Deformation</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 2615</span><span class="cw-row__title">Introduction to Materials Science</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 3422</span><span class="cw-row__title">Mechanical Engineering II: Fluid Mechanics</span><span class="cw-row__cr">1</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Spring 2026</h3>
+              <span class="cw-term__cr">4 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">MENG 3020L</span><span class="cw-row__title">Mechatronics Laboratory</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 3323</span><span class="cw-row__title">Mechanical Engineering III: Dynamics</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 3423L</span><span class="cw-row__title">Fluid Mechanics and Thermodynamics Laboratory</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 3424</span><span class="cw-row__title">Mechanical Engineering IV: Fluid and Thermal Energy Sciences</span><span class="cw-row__cr">1</span></div>
+          </div>
+
+          <div class="cw-term">
+            <div class="cw-term__head">
+              <h3 class="cw-term__name">Fall 2026 · In Progress</h3>
+              <span class="cw-term__cr">4 cr</span>
+            </div>
+            <div class="cw-row"><span class="cw-row__code">MENG 2050</span><span class="cw-row__title">Computer-Aided Engineering</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 3125</span><span class="cw-row__title">Machine Parts and Manufacturing</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">MENG 4137L</span><span class="cw-row__title">Capstone Mechanical Design I</span><span class="cw-row__cr">1</span></div>
+            <div class="cw-row"><span class="cw-row__code">SOCY 2169</span><span class="cw-row__title">Social Networks and Data Science</span><span class="cw-row__cr">1</span></div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="proj-sidebar">
+        <div class="proj-sidebar__card">
+          <h4>At a Glance</h4>
+          <div class="card__row"><span>degree</span><span>B.S. Mechanical Eng.</span></div>
+          <div class="card__row"><span>college</span><span>Yale College</span></div>
+          <div class="card__row"><span>class</span><span>2027</span></div>
+          <div class="card__row"><span>earned</span><span>32.5 credits</span></div>
+          <div class="card__row"><span>current</span><span>Fall 2026</span></div>
+          <div class="card__row"><span>abroad</span><span>CET Osaka, 2024</span></div>
+        </div>
+
+        <div class="proj-sidebar__card">
+          <h4>Related</h4>
+          <a href="./#resume" class="proj-other-link">
+            <span>Résumé</span>
+            <span class="proj-other-link__num">R-01/02</span>
+          </a>
+          <a href="./#research" class="proj-other-link">
+            <span>Research</span>
+            <span class="proj-other-link__num">02</span>
+          </a>
+          <a href="./#projects" class="proj-other-link">
+            <span>Projects</span>
+            <span class="proj-other-link__num">03</span>
+          </a>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="tblock">
+      <div class="tblock__cell tblock__cell--wide">
+        <span class="tblock__title">Murat Khidoyatov · Portfolio</span>
+        <span class="tblock__sub">Designed &amp; built by hand · no template</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Drawn by</span>
+        <span class="tblock__v">M.K.</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Date</span>
+        <span class="tblock__v">2026.08</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Scale</span>
+        <span class="tblock__v">NTS</span>
+      </div>
+      <div class="tblock__cell">
+        <span class="tblock__k">Sheet</span>
+        <span class="tblock__v">1 / 1</span>
+      </div>
+    </div>
+    <div class="footer__row">
+      <span class="footer__sig">© 2026 Murat Khidoyatov</span>
+      <div class="footer__links">
+        <a href="mailto:murat.khidoyatov@yale.edu">Email</a>
+        <a href="https://www.linkedin.com/in/muratkhid" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/muratkhid" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
