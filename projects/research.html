@@ -3,14 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Physics-Informed Neural Networks — Fluid & Solid Mechanics · Murat Khidoyatov" />
+  <meta name="description" content="Physics-informed neural networks for fluid & solid mechanics — JAX dual-network PINNs trained on CFD data, GPU-accelerated on NVIDIA L4/A100 hardware." />
   <title>PINN Research · Murat Khidoyatov</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="icon" type="image/jpeg" href="../img/headshot.jpg" />
+  <link rel="icon" type="image/png" href="../favicon.png" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <link rel="canonical" href="https://muratkhid.github.io/MuratKhid/projects/research.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Physics-Informed Neural Networks — Murat Khidoyatov" />
+  <meta property="og:description" content="JAX dual-network PINNs for fluid & solid mechanics, trained on CFD data and GPU-accelerated on NVIDIA L4/A100." />
+  <meta property="og:image" content="https://muratkhid.github.io/MuratKhid/img/pinn-results.jpg" />
+  <meta property="og:url" content="https://muratkhid.github.io/MuratKhid/projects/research.html" />
+  <meta property="og:site_name" content="Murat Khidoyatov" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Physics-Informed Neural Networks — Murat Khidoyatov" />
+  <meta name="twitter:description" content="JAX dual-network PINNs for fluid & solid mechanics, GPU-accelerated on NVIDIA L4/A100." />
+  <meta name="twitter:image" content="https://muratkhid.github.io/MuratKhid/img/pinn-results.jpg" />
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
@@ -271,6 +287,20 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
+    /* roundRect is missing on Firefox < 112 / Safari < 16 */
+    if (!ctx.roundRect) {
+      ctx.roundRect = function (x, y, w, h, r) {
+        r = Math.min(r, w / 2, h / 2);
+        this.moveTo(x + r, y);
+        this.arcTo(x + w, y, x + w, y + h, r);
+        this.arcTo(x + w, y + h, x, y + h, r);
+        this.arcTo(x, y + h, x, y, r);
+        this.arcTo(x, y, x + w, y, r);
+        this.closePath();
+        return this;
+      };
+    }
+
     /* Convergence data: simulated epochs */
     const EPOCHS = [
       { c1: 0.80, d1: 0.35, loss: 0.2847 },
@@ -314,9 +344,9 @@
       bottom: n => ({ x: n.x + n.w / 2,   y: n.y + n.h     }),
     };
 
-    function build() {
-      W = canvas.width;
-      H = canvas.height;
+    function build(cw, ch) {
+      W = cw;
+      H = ch;
       S = W / 760;
 
       N = {};
@@ -564,16 +594,41 @@
       ctx.fillStyle    = clr.muted;
       ctx.fillText(`// iteration ${epochIdx + 1} / ${EPOCHS.length}`, W - 14 * S, 11 * S);
 
-      requestAnimationFrame(frame);
+      rafId = requestAnimationFrame(frame);
     }
 
     /* ── Resize observer ─────────────────────────────────────────── */
     function resize() {
       const parent = canvas.parentElement;
       const cw     = parent.clientWidth;
-      canvas.width  = cw;
-      canvas.height = Math.round(cw * 0.52);
-      build();
+      const ch     = Math.round(cw * 0.52);
+      const dpr    = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width  = Math.round(cw * dpr);  /* backing store in device px; CSS keeps display size */
+      canvas.height = Math.round(ch * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); /* keep all drawing coords in CSS px */
+      build(cw, ch);
+    }
+
+    /* ── Run the loop only while the canvas is on screen ─────────── */
+    let rafId = null, booted = false, inView = true, pausedAt = 0;
+    function start() {
+      if (!booted || !inView || rafId !== null) return;
+      /* rebase the clock so the cycle resumes where it paused */
+      if (pausedAt && startTime) startTime += performance.now() - pausedAt;
+      pausedAt = 0;
+      rafId = requestAnimationFrame(frame);
+    }
+    function stop() {
+      if (rafId === null) return;
+      cancelAnimationFrame(rafId);
+      rafId = null;
+      pausedAt = performance.now();
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        inView = entries.some(e => e.isIntersecting);
+        inView ? start() : stop();
+      }).observe(canvas);
     }
 
     const ro = new ResizeObserver(resize);
@@ -581,7 +636,7 @@
     resize();
 
     /* Wait for fonts before first paint */
-    document.fonts.ready.then(() => requestAnimationFrame(frame));
+    document.fonts.ready.then(() => { booted = true; start(); });
   })();
   </script>
 </body>
