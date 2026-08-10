@@ -1,0 +1,17 @@
+# Murat Khidoyatov
+
+> Portfolio of Murat Khidoyatov — mechanical engineer and computational researcher at Yale University ('27), working at the intersection of physics-based modeling, machine learning, and hardware design.
+
+Murat is an undergraduate at Yale University studying mechanical engineering. He develops physics-informed neural networks for hyperelastic materials in the Humphrey MechanoBiology Lab, leads mechanism design for the Yale Undergraduate Robotics Mars rover life-detection system, and led a Yale AID team that delivered a custom pediatric prosthetic limb. He previously interned at Oak Ridge National Laboratory, building an ML + Bayesian Optimization pipeline (96% accuracy) for aluminum alloy design. The site contains an interactive portfolio (including a live CFD hero animation and a 4-DoF arm simulator), five project pages, a gallery, and two downloadable resumes.
+
+## Pages
+
+- [Home](https://muratkhid.github.io/MuratKhid/): Main portfolio — about, research (PINNs for hyperelastic mechanics; ML-driven alloy design at ORNL), six project summaries, gallery, and resume downloads.
+- [Mars Rover Life-Detection System](https://muratkhid.github.io/MuratKhid/projects/mars-rover.html): Lead engineer for Yale Undergraduate Robotics — 4-DoF robotic arm with an interactive FK/IK simulator, 50N linear actuator deployment mechanism validated to a 2.0x safety factor via FEA.
+- [Pediatric Prosthetic Limb](https://muratkhid.github.io/MuratKhid/projects/prosthetics.html): Led a 7-member Yale AID team to design and deliver a custom passive prosthetic arm to a 5-year-old patient; $5,000+ funding secured, SolidWorks CAD, FEA, and 3D-printed silicone mold iteration.
+- [Physics-Informed Neural Networks](https://muratkhid.github.io/MuratKhid/projects/research.html): Humphrey MechanoBiology Lab research — JAX-based dual-network PINN for fluid and solid mechanics, CFD-generated training data, constitutive equation discovery for elastomers, GPU-accelerated on NVIDIA L4/A100.
+- [Custom Spectrometer](https://muratkhid.github.io/MuratKhid/projects/spectrometer.html): Scratch-built spectrometer for on-board soil sample analysis on the rover — Raspberry Pi camera with IR filter removed, 47-degree diffraction element, Fourier decomposition and image analysis.
+- [ML & Materials Research at Oak Ridge](https://muratkhid.github.io/MuratKhid/projects/ornl.html): ORNL R&D internship — random forest surrogate models with Bayesian Optimization over 50,000+ alloy/processing combinations, plus DFM tooling for nuclear graphite handling that cut process cycle time 66%.
+- [Coursework](https://muratkhid.github.io/MuratKhid/coursework.html): Yale classes taken term by term with credit values, no grades listed.
+- [Mechanical Engineering Resume (PDF)](https://muratkhid.github.io/MuratKhid/resume/Murat_Khidoyatov_s_Mechanical_Engineering_Resume.pdf): Hardware-focused resume — CAD, FEA, mechanism design, fabrication, aerospace structures.
+- [Machine Learning Resume (PDF)](https://muratkhid.github.io/MuratKhid/resume/Murat_Khidoyatov_ML_Resume.pdf): Computational resume — ML, scientific computing, CFD, PINNs, GPU acceleration.
